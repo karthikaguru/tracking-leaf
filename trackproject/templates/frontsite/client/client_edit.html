@@ -1,0 +1,79 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Edit Client {% endblock %}
+
+{% block content %}
+<div class="container p-4 well " style="margin-left:25em ;width:632px;margin-top:4em">
+    <h2 class="text-center">Edit Client :{{ client.name }}</h2>
+    <form method="post" enctype="multipart/form-data" autocomplete="off" style="width: 100%;">
+        {% csrf_token %}
+        <div class="row mb-3" style="margin-top: 3px;">
+            <label for="id_user" class="col-sm-3 col-form-label">User :</label>
+            <div class="col-sm-9">
+                {{ form.user }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_name" class="col-sm-3 col-form-label" autocomplete="off">Name:</label>
+            <div class="col-sm-9">
+                {{ form.name }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_phone_number" class="col-sm-3 col-form-label">Phone Number:</label>
+            <div class="col-sm-9">
+                {{ form.phone_number }}
+            </div>
+        </div>
+        <div class="row mb-3">
+            <label for="id_email" class="col-sm-3 col-form-label">Email :</label>
+            <div class="col-sm-9">
+                {{ form.email }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_site_location" class="col-sm-3 col-form-label">Site Location :</label>
+            <div class="col-sm-9">
+                {{ form.site_location }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_site_name" class="col-sm-3 col-form-label">Site Name :</label>
+            <div class="col-sm-9">
+                {{ form.site_name }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_project_start_date" class="col-sm-3 col-form-label p-3" >Project Start Date:</label>
+            <div class="col-sm-9">
+                {{ form.project_start_date }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_project_end_date" class="col-sm-3 col-form-label">Project End Date:</label>
+            <div class="col-sm-9">
+                {{ form.project_end_date }}
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <label for="id_documents" class="col-sm-3 col-form-label">Documents :</label>
+            <div class="col-sm-9">
+                {{ form.documents }}
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary  px-2 text-bold fs-5" style="margin-left: 510px;">Save</button>
+    </form>
+</div>
+{%endblock%}

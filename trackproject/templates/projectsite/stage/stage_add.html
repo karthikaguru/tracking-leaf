@@ -1,0 +1,73 @@
+{% extends 'projectsite/base.html' %}
+{% block title %}Add Stage{% endblock %}
+{% block content %}
+
+           
+
+<div class="container-fluid create well table-responsive p-4" style="margin-left:25em ;width:632px;margin-top:4em">
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+        <div class="row mb-3">
+            <label for="id_project" class="col-12 col-md-3 col-form-label">Project:</label>
+            <div class="col-12 col-md-9">
+              {{ form.project }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="id_name" class="col-12 col-md-3 col-form-label">Name:</label>
+            <div class="col-12 col-md-9">
+              {{ form.name }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="id_due_date" class="col-12 col-md-3 col-form-label">Due Date:</label>
+            <div class="col-12 col-md-9">
+              {{ form.due_date }}
+            </div>
+          </div>
+          
+          <div class="row mb-3">
+            <label for="id_start_date" class="col-12 col-md-3 col-form-label">start_date:</label>
+            <div class="col-12 col-md-9">
+              {{ form.start_date }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="id_end_date" class="col-12 col-md-3 col-form-label">end_date:</label>
+            <div class="col-12 col-md-9">
+              {{ form.end_date }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="id_progress" class="col-12 col-md-3 col-form-label">progress:</label>
+            <div class="col-12 col-md-9">
+              {{ form.progress }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="id_status" class="col-12 col-md-3 col-form-label">status:</label>
+            <div class="col-12 col-md-9">
+              {{ form.status }}
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="id_stage_type" class="col-12 col-md-3 col-form-label">stage_type:</label>
+            <div class="col-12 col-md-9">
+              {{ form.stage_type }}
+            </div>
+          </div>
+          
+          <button type="submit" class="btn btn-success">Save</button>
+          <a href="{% url 'stage_list' project.id %}" class="btn btn-secondary">Cancel</a>
+      </form>
+</div>
+</div>
+<script>
+    const new_date =new Date().toISOString().split('T')[0]
+    document.getElementById('id_start_date').setAttribute('min',new_date)
+    document.getElementById('id_end_date').setAttribute('min',new_date)
+    const due_date =new Date().toISOString().split('T')[0]
+    document.getElementById('id_due_date').setAttribute('min',due_date)
+</script>
+{% endblock %}

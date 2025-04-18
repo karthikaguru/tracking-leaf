@@ -1,0 +1,32 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Profile page{% endblock %}
+{% block content%}
+<style>
+    .profile-container {
+        display: flex;
+        flex-direction: column;
+       
+    }
+    
+</style>
+<div class ="container bg-light p-3" style="margin: 450px;margin-top:100px;width:550px;height:300px;">
+  
+      
+           <h1 class="bg-info ">PROFILE INFORMATION</h1>
+           <p style="margin-left:420px;margin-top:10px;" class="btn  bg-warning btn-outline-success "><a href="{% url 'profile'%}">Update</a></p>
+           <div class="profile-container">    
+                  
+            <h5 class="pt-2">Userename: <strong style="margin-left:40px;">{{user.username}}</strong></h5>
+            <h5 class="pt-1">Email:<strong style="margin-left:95px;">{{user.email}}</strong></h5>
+            <h5 class="pt-1">phone_number:<strong style="margin-left:5px;">{{user.phone_number}}</strong></h5>
+            <h5>location:<strong style="margin-left:70px;;">{{user.profile.location}}</strong></h5>
+            <img src="{{user.profile.image.url}}" alt="not loaded properly" width="100px" height="100px" class="d-flex" style="margin-left: 400px;margin-top:-25%;border-radius:30%;" >
+          
+            </div>
+                
+            </div>
+ {% endblock %}    

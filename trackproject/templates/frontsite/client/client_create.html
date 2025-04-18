@@ -1,0 +1,93 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Create Client{% endblock %}
+
+{% block content %}
+<div class="container-fluid create well table-responsive" style="margin-left:25em ;width:800px;margin-top:4em">
+    <div class="ms-5 text-light">
+    <h2 class="text-center "style="color: rgb(3, 108, 106);">Create Client</h2>
+    <form method="post" enctype="multipart/form-data" autocomplete="off" class="margin-top:13px">
+        {% csrf_token %}
+        
+        <div class="row mb-3">
+            <label for="id_user" class="col-12 col-md-3  ">User:</label>
+            <div class="col-12 col-md-7 mb-2">
+                {{ form.user }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_name" class="col-12 col-md-3 col-form-label" >Name:</label>
+            <div class="col-12 col-md-7 mb-3">
+                {{ form.name }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_phone_number" class="col-12 col-md-3 col-form-label">Phone Number:</label>
+            <div class="col-12 col-md-7 mb-3" style="margin-top: 5px;">
+                {{ form.phone_number }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_email" class="col-12 col-md-3 col-form-label ">Email:</label>
+            <div class="col-12 col-md-7 mb-2 ">
+                {{ form.email }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_site_location" class="col-12 col-md-3 col-form-label">Site Location:</label>
+            <div class="col-12 col-md-7 mb-2">
+                {{ form.site_location }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_site_name" class="col-12 col-md-3 col-form-label">Site Name:</label>
+            <div class="col-12 col-md-7 mb-2 " style="margin-top: 3px;">
+                {{ form.site_name }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_project_start_date" class="col-12 col-md-3 col-form-label">Project Start Date:</label>
+            <div class="col-12 col-md-7 mb-2" style="margin-top: 10px;">
+                {{ form.project_start_date }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_project_end_date" class="col-12 col-md-3 col-form-label">Project End Date:</label>
+            <div class="col-12 col-md-7 mb-2" style="margin-top:3px;">
+                {{ form.project_end_date }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="id_documents" class="col-12 col-md-3 col-form-label">Documents:</label>
+            <div class="col-12 col-md-7 mb-2">
+                {{ form.documents }}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary text-bold px-4 fs-5 mb-3">Save</button>
+        </div>
+    </form>
+    </div>
+</div>
+<script>
+    // Get the current date in the required format (YYYY-MM-DD)
+    const today = new Date().toISOString().split('T')[0];
+
+    // Set the 'min' attribute dynamically to hide past dates
+    document.getElementById('id_project_start_date').setAttribute('min', today);
+    document.getElementById('id_project_end_date').setAttribute('min', today);
+</script>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Projects for {{ client.name }}{% endblock %}
+
+{% block content %}
+
+<div class="table-responsive"style="margin-left:16em; margin-top:5em;width:1150px">
+    <h1>Projects for {{ client.name }}</h1>
+    <table class="table table-striped" style="width: 850px;">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Budget</th>
+                <th>Description</th>
+                <th>View Stages</th> <!-- Add this line -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.name }}</td>
+                <td>{{ project.budget }}</td>
+                <td>{{ project.description }}</td>
+                <td>
+                    <a href="{% url 'stages_list_by_project' project.id %}" class="btn btn-success btn-sm p-2">View Stages</a> <!-- Add this section -->
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{% url 'project_add' %}" class="btn btn-primary mt-3">Add New Project</a>
+    <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">Back to Project List</a>
+{% endblock %}

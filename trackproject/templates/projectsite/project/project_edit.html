@@ -1,0 +1,65 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Edit Project{% endblock %}
+{% block content %}
+<div class="container p-4 well" style="margin-left:25em; width:632px; margin-top:4em;">
+  <div class="ms-5 text-light">
+    <h1 style="color: rgb(3, 108, 106);">Edit Project</h1>
+    <form method="post" enctype="multipart/form-data" autocomplete="off" class="margin-top:13px;">
+      {% csrf_token %}
+      
+      <div class="row mb-3">
+        <label for="id_client" class="col-12 col-md-3 col-form-label">Client:</label>
+        <div class="col-12 col-md-9">
+          {{ form.client }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label for="id_name" class="col-12 col-md-3 col-form-label">Name:</label>
+        <div class="col-12 col-md-9">
+          {{ form.name }}
+        </div>
+      </div>
+     
+
+
+      <div class="row mb-3">
+        <label for="id_budget" class="col-12 col-md-3 col-form-label">Budget:</label>
+        <div class="col-12 col-md-9">
+          {{ form.budget }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label for="id_length" class="col-12 col-md-3 col-form-label">Length (ft):</label>
+        <div class="col-12 col-md-9">
+          {{ form.length }}
+        </div>
+      </div>
+
+      <div class="row mb-3">
+        <label for="id_breadth" class="col-12 col-md-3 col-form-label">Breadth (ft):</label>
+        <div class="col-12 col-md-9">
+          {{ form.breadth }}
+        </div>
+      </div>
+
+     
+      
+      <div class="row mb-3">
+        <label for="id_status" class="col-12 col-md-3 col-form-label">Status:</label>
+        <div class="col-12 col-md-9">
+          {{ form.status }}
+        </div>
+      </div>
+      
+      <button type="submit" class="btn btn-primary" style="margin-left:422px;">Save Project</button>
+    </form>
+  </div>
+  <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3" style="margin-left:422px;">Back to Project List</a>
+</div>
+{% endblock %}

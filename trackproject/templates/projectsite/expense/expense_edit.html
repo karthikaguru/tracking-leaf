@@ -1,0 +1,58 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Expense Edit{% endblock %}
+
+{% block content %}
+<div class="container well p-4" style="margin-left:17em; margin-top:5em;">
+  <h2>{% if form.instance.pk %}Edit{% else %}New{% endif %} Expense for {{ project.name }}</h2>
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class= "row mb-3">
+        <label for="id_project" class="col-12 col-md-3">Project</label>
+        <div class="col-12 col-md-9">        
+          {{ form.project }}
+          </div>
+ 
+    </div>
+    
+    <div class=" row mb-3">
+        <label for="id_stage" class="col-12 col-md-3">Stage</label>
+        <div class="col-12 col-md-9">
+          {{ form.stage }}
+        </div>
+     
+    </div>
+    
+    <div class="row mb-3">
+        <label for="id_description" class="col-12 col-md-3">Description</label>
+        <div class="col-12 col-md-9">       
+           {{ form.description }}
+        </div>
+
+    </div>
+    
+    <div class="row mb-3">
+        <label for="id_amount_spent" class="col-12 col-md-3">Amount Spent</label>
+        <div class="col-12 col-md-9">
+        {{ form.amount_spent }}
+        </div>
+    </div>
+    
+    <div class="row mb-3">
+        <label for="id_date" class="col-12 col-md-3">Date</label>
+        <div class="col-12 col-md-9">
+        {{ form.date }}
+        </div>
+    </div>
+    
+    <button type="submit" class="btn btn-success">Save</button>
+</form>
+
+  <a href="{% url 'expense_list' project.id %}">Cancel</a>
+  </div>
+{% endblock %}

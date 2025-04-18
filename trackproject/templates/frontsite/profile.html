@@ -1,0 +1,19 @@
+{% extends 'frontsite/index.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block title %}profile Page{% endblock %}
+
+{% block content %}
+
+<div class="container well p-3 " style="margin-top: 100px; width:650px;">
+    <div>
+        <h2 class="text-primary page-header text-center"> profile page</h2>
+         
+        <h1>name : {{user.username}}</h1>
+        <h1>email : {{user.email}}</h1>
+</div>
+    </form>
+</div>
+
+{% endblock %}

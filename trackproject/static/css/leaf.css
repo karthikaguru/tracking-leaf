@@ -1,0 +1,121 @@
+
+.well {
+    padding: 1px;
+    border-radius: 5%;
+    background-color:  #94b5d3;
+    margin:130px;
+    margin-left:580px;
+    margin-top: 100px;
+    font-size:19px;
+    
+}
+.new{
+  
+    text-align: center;
+    
+
+}
+
+.form-popup {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 9;
+  }
+
+
+body {
+    
+    background: linear-gradient(135deg, #f0f8ff, #b0c4de, #e6e6fa); /* Gradient background */
+    color: #333333; /* Dark Grey */
+    animation: gradientShift 10s infinite alternate; /* Animation effect */
+}
+
+.sidebar-custom {
+    position: fixed; /* Keeps the sidebar in place */
+    top: 5%;
+    left: 0;
+    height: 100%; /* Makes it span the full height of the viewport */
+    width: 250px; /* Set your preferred width */
+    background-color: #94b5d3; 
+    color: white; /* Text color */
+    overflow-y: auto; /* Adds scroll if content overflows */
+}
+
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.navbar-custom {
+    background-color: #92b2db; /* Light Steel Blue */
+    color: #ffffff; /* White */
+}
+
+
+
+.btn-primary {
+    background-color: #447180; /* Light Blue */
+    border-color: #add8e6;
+    color: #ffffff; /* White */
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+.btn-primary:hover {
+    background-color: #5a9bd4; /* Darker Blue on hover */
+}
+
+.btn-outline-info {
+    border-color: #4a6a75; /* Light Blue */
+    color: #acceda; /* Light Blue */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+.btn-outline-info:hover {
+    background-color: #add8e6; /* Light Blue on hover */
+    color: #ffffff; /* White on hover */
+}
+
+.alert {
+    background-color: #e0ffff; /* Light Cyan */
+    color: #333333; /* Dark Grey */
+    border-left: 4px solid #b0c4de; /* Accent border */
+}
+.custom-textbox {
+    width: 100%; /* Full width of the parent container */
+    height: 50px; /* Adjust height as needed */
+    padding: 10px; /* Add padding for better usability */
+}
+
+
+h1, p {
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
+}
+
+/* Adjust the gap between buttons as needed */
+
+.button {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 3px; 
+    margin-top: 0px;
+}
+.create{
+    background-color: #94b5d3;
+    font-size: 19px ;
+    
+}
+.description{
+    text-align: right;
+}
+#budgetchart{
+     width:250px;
+     height:250px;
+}
+.logo{
+    width:200px;
+}

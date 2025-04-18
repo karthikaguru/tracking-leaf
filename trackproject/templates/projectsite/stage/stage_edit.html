@@ -1,0 +1,14 @@
+{% extends 'projectsite/base.html' %}
+{% block title %}Edit Stage{% endblock %}
+{% block content %}
+<div class="container-fluid create well table-responsive p-4" style="margin-left:25em ;width:632px;margin-top:4em">
+    <div class="container">
+    <h1>{{ form.instance.id|yesno:"Edit Stage,Add Stage" }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+    </div>
+    </div>
+{% endblock %}
