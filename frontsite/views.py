@@ -1,12 +1,14 @@
 from django.shortcuts import render,redirect 
 from django.contrib.auth.models import User 
 from .models import CustomUser
+from django.core.paginator import Paginator
 from .forms import UserRegistrationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils.crypto import get_random_string
 from .forms import LoginForm
+from django.core.mail import send_mail
 
 
 def register(request):
@@ -36,9 +38,7 @@ def register(request):
             return redirect('register')
 
         # Check if email already exists
-        if CustomUser.objects.filter(email=email).exists():
-            messages.warning(request, 'Email is already registered. Please use a different email.')
-            return redirect('register')
+        
 
         # Create the user if validations pass
         user = CustomUser.objects.create_user(
@@ -53,6 +53,14 @@ def register(request):
             project_end_date=project_end_date
         )
        
+
+     
+        send_mail(
+            "Welcome to Leaf Construction!",  # Subject of the email
+            f"Hi {username},\n\nYou are successfully registered\n\nThank you for registering with Leaf Construction.We are happy to have you on board and look forward to delivering exceptional service.\n\nBest regards,\nThe Leaf Construction Team"
+            'dglkarthika97@gmail.com',  # From email
+            [email]  # Recipient list
+        )
 
         # Assign the appropriate role
         if role == 'admin':
@@ -129,7 +137,10 @@ def about_us(request):
 
 def client_list(request):
      client =CustomUser.objects.all()
-     return render(request, 'frontsite/client/client_list.html',{'clients':client})
+     page=Paginator(client,2)
+     page_list =request.GET.get('page')
+     page=page.get_page(page_list)
+     return render(request, 'frontsite/client/client_list.html',{'clients':page})
 
 def client_update(request,id):
        user =CustomUser.objects.get(id=id)

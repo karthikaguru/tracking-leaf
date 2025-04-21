@@ -7,7 +7,7 @@ class Profile(models.Model):
     username =models.CharField(max_length=200,null=True)
     location =models.CharField(max_length=200,null=True)
     phone_number =models.IntegerField(null=True)
-    image = models.ImageField( upload_to='profile_pics')
+    image = models.ImageField( upload_to='profile_pics',default='default.jpg')
  
     def __str__(self):
         return f'{self.user.username} Profile'

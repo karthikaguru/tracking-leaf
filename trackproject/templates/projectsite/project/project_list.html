@@ -38,7 +38,7 @@
                         <td>{{ project.breadth }}</td>
                         <td style="width: 90px;">{{ project.land_area }}</td>
                         
-                        <td class="button" style="width: 250px; height:275px;">
+                        <td class="button" >
                             {% if request.user.role == 'TEAM_USER' %}
                                 <a href="{% url 'project_edit' project.id %}" class="btn btn-info btn-sm m-1 p-2">Update Progress</a>
                                 <a href="{% url 'project_delete' project.id %}" class="btn btn-danger btn-sm p-2 m-1">Delete</a>
@@ -55,5 +55,25 @@
             </table>
         </div>
         <a href="{% url 'project_add' %}" class="btn btn-primary mt-3">Add New Project</a>
+    </div>
+    <div class="container">
+        <div class="col-md-12 offset-md-9">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                  {% if projects.has_previous%}
+                     <li class="page-item"><a class="page-link" href="{% url 'project_list'%}?page={{projects.previous_page_number}}">Previous</a></li>
+                  {% endif %}
+                  {% for num_page in projects.paginator.page_range %}
+                  {% if  projects.number == num_page %}
+                        <li class="page-item active"><a class="page-link" href="{% url 'project_list'%}?page={{num_page}}">{{num_page}}</a></li>
+                
+                        {% endif %}
+                        {% endfor %}
+                  {% if projects.has_next %}
+                     <li class="page-item"><a class="page-link" href="{% url 'project_list'%}?page={{projects.next_page_number}}">Next</a></li>
+                  {% endif %}
+                </ul>
+              </nav>
+        </div>
     </div>
 {% endblock %}

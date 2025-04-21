@@ -14,7 +14,7 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ['location','phone_number','image']
+        fields = ['location','image']
         widgets = { 
             'image': forms.ClearableFileInput(attrs={'class': 'form-control-file'}),
         }

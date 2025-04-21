@@ -24,9 +24,11 @@
             <h5 class="pt-1">Email:<strong style="margin-left:95px;">{{user.email}}</strong></h5>
             <h5 class="pt-1">phone_number:<strong style="margin-left:5px;">{{user.phone_number}}</strong></h5>
             <h5>location:<strong style="margin-left:70px;;">{{user.profile.location}}</strong></h5>
-            <img src="{{user.profile.image.url}}" alt="not loaded properly" width="100px" height="100px" class="d-flex" style="margin-left: 400px;margin-top:-25%;border-radius:30%;" >
-          
-            </div>
+            {% if user.profile.image %}
+                 <img src="{{user.profile.image.url}}"  alt="Profile picture of {{ user.username }}"  width="100px" height="100px" class="d-flex" style="margin-left: 400px;margin-top:-25%;border-radius:30%;" >
+            {% else %}
+                <img src="{% static  'images/default.jpg' %}"  class="img-fluid rounded-circle">
+            {% endif %}
                 
             </div>
  {% endblock %}    

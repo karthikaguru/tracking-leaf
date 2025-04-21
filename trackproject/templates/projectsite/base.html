@@ -57,14 +57,12 @@
     <div class="d-flex">
         <div class="d-flex flex-column flex-shrink-0 p-3 sidebar-custom text-white">
             <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                <span class="fs-4">Leaf Construction</span>
+                <span class="fs-4 m-3">Leaf Construction</span>
             </a>
-            <hr>
+         
         
             <ul class="nav nav-pills flex-column mb-auto">
-                <li class="menu-title">
-                    <span>Main Menu</span>
-                </li>
+               
                 {% if user.is_authenticated and user.is_staff and user.is_superuser %}
                     <!-- Admin-Specific Items -->
                     <li class="nav-item">
@@ -78,7 +76,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="#">
+                        <a class="nav-link text-white" href="{%url 'client_list'%}">
                             <i class="fas fa-clipboard-list"></i> Client list
                         </a>
                     </li>                  
@@ -92,7 +90,7 @@
                             <i class="fas fa-list-ul"></i> Project List
                         </a>
                     </li>
-                {% elif request.user.role == 'TEAM_USER' %}
+                {% elif user.role == 'TEAM_USER' %}
                     <!-- Team User-Specific Items -->
                     <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'manage_projects' %}">
@@ -106,7 +104,7 @@
                         </a>
                     </li>
                     
-                {% elif request.user.role == 'CLIENT' %}
+                {% elif user.role == 'CLIENT' %}
                     <!-- Client-Specific Items -->
                     <li class="nav-item">
                         <a class="nav-link text-white" href="#">

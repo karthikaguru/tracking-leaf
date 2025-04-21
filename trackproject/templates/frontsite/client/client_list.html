@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for client in clients %}
+                {% for client in clients.object_list %}
                 <tr>
                     <td>{{ client.username }}</td>
                     <td>{{ client.phone_number }}</td>
@@ -45,6 +45,24 @@
         <a href="{% url 'register' %}" class="btn btn-primary fs-4">Add New Client</a>
         </div>
             </div>
+    <nav aria-label="Page navigation example" style="margin-left:79em;margin-top:2em;">
+        <p class="text-primary d-flex justify-content-left ">Page:{{clients.number}}/{{clients.paginator.num_pages}}</p>
+        <ul class="pagination">
+             {% if clients.has_previous %}
+                    <li class="page-item"><a class="page-link" href="{% url 'client_list'%}?page={{clients.previous_page_number}}">Previous</a></li>
+             {% endif %}
+             {% for num_page in clients.paginator.page_range%}
+                {% if clients.number == num_page  %}
+                
+                <li class="page-item active">
+                    <a class="page-link" href="{% url 'client_list' %}?=page{{num_page}}">{{num_page}}</a>
+                </li>
+                {% endif %}
+             {%endfor%}
+             {% if clients.has_next %}
+                 <li class="page-item"><a class="page-link" href="{% url 'client_list'%}?page={{clients.next_page_number}}">Next</a></li>
+             {%endif%}
+        </ul>
+       
+      </nav>
 {% endblock %}
-
-

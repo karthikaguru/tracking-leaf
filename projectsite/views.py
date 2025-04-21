@@ -8,7 +8,8 @@ from django.contrib import messages
 from django.http import HttpResponseForbidden
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-
+from django.core.paginator import Paginator
+from django.core.mail import send_mail
 from django.core.serializers.json import DjangoJSONEncoder
 from datetime import date
 import json
@@ -50,17 +51,6 @@ def manage_projects(request):
     
     return render(request, 'projectsite/admin/manage_projects.html', context)
 
-
-
-
-
-
-
-
-
-
-
-
 # List all projects
 @login_required
 def project_list(request, client_id=None):
@@ -68,7 +58,10 @@ def project_list(request, client_id=None):
         projects = Project.objects.filter(client_id=client_id)
     else:
         projects = Project.objects.all()
-    return render(request, 'projectsite/project/project_list.html', {'projects': projects})
+        project_page =Paginator(projects,1)
+        project_list= request.GET.get('page')
+        project_page= project_page.get_page(project_list)
+    return render(request, 'projectsite/project/project_list.html', {'projects': project_page})
 
 
 @login_required
@@ -89,12 +82,38 @@ def project_add_view(request):
     if request.method == "POST":
         form = ProjectForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('project_list')
+            form.save()  
+          # Recipient list
+            budget_email_subject = "Your Weekly Budget Update"
+            budget_email_message = f"""
+            Hi {CustomUser.username},
+
+            Here's your budget update:
+            - Income: ₹50,000
+            - Expenses: ₹30,000
+            - Savings: ₹20,000
+
+            Thank you for using our services.
+
+            Best regards,
+            The Leaf Construction Team
+            """
+            send_mail(
+                budget_email_subject,
+                budget_email_message,
+                'dglkarthika97@gmail.com',
+                [CustomUser.email]
+            )
+
+        
+
+        return redirect('project_list')
+           
+
+
     else:
         form = ProjectForm()
     return render(request, 'projectsite/project/project_add.html', {'form': form})
-
 
 
 
