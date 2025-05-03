@@ -7,11 +7,22 @@
 {% block title %}Login - Leaf Construction{% endblock %}
 
 {% block content %}
+<style>
+    body {
+        background-image: url('images/image.png');
+        background: linear-gradient(90deg);
+        background-size: 100% 100%;
+        animation: gradientShift 15s infinite;
+    
+        background-position:fixed ;
+    }
+</style>
+
 <div class="container-fluid create well table-responsive d-flex justify-content-center align-items-center " style="margin-left:27em;width: 500px; margin-top: 11em;">
     <div class="row p-3">
         <!-- Brand Heading -->
         <h1 class="pb-3 text-center" style="color: rgb(75, 42, 165);">Leaf Construction</h1>
-
+        
         <!-- Display Django Messages -->
         {% if messages %}
         {% for message in messages %}
@@ -66,7 +77,7 @@
                              
                     
                     <p class="mt-3">
-                        <a href= "#" class="forgot-password-link">Forgot Password?</a>
+                        <a href= "#" class="forgot-password-link"></a>
                     </p>
                 
                     <p class="text-center mt-3">
@@ -74,7 +85,7 @@
                     </p>
                 </div>
                 </div>
-                            </div>
+            </div>
         </form>
 
         <!-- Register Link -->
@@ -87,7 +98,7 @@
 <script>
     $(document).ready(function () {
         // Hides the message after 5 seconds (5000ms)
-            $('.alert').hide(5000);
+            $('.alert').hide(10000);
         });
    
     document.addEventListener("DOMContentLoaded", function() {

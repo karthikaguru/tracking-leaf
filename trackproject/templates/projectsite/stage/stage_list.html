@@ -21,7 +21,6 @@
                         <td>{{ stage.progress }}%</td>
                         <td>
                             <a href="{% url 'stage_edit' stage.id %}" class="btn btn-warning btn-sm">Update</a>
-                            <a href="{% url 'stage_delete' stage.id %}" class="btn btn-danger btn-sm">Delete</a>
                             <a href="{% url 'expense_list' project.id %}" class="btn btn-success btn-sm">Expenses</a>
                         
                         </td>

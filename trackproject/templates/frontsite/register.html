@@ -7,12 +7,30 @@
 {% block title %}Register Page{% endblock %}
 
 {% block content %}
-<div class="container well d-flex justify-content-center align-items-center" style="width: 650px; margin-top:2em; margin-left:550px;">
-    <div class="row p-2 m-3">
+
+<style>
+    .success-popup {
+        position: fixed;
+        top: 40%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgb(11, 186, 11);
+        color: white;
+        padding: 70px;
+        text-align: center;
+        width:250px;
+        height: 200px;
+        border:2px solid white;
+        border-radius: 10%;
+    }
+    
+</style>
+<div class="container well d-flex justify-content-center align-items-center " style="width: 650px; margin-top:2em; margin-left:550px;">
+    <div class="row p-2 m-3 ">
         <h2 class="page-header text-center mb-4" style="color: rgb(75, 42, 165);">Register</h2>
+      
 
-
-        <form method="post" enctype="multipart/form-data" autocomplete="off">
+        <form method="post" id="registerform"  enctype="multipart/form-data" autocomplete="off">
             {% csrf_token %}
 
             <!-- Username Field -->
@@ -70,6 +88,8 @@
                     <input type="date" id="id_project_end_date" name="project_end_date" class="form-control">
                 </div>
             </div>
+         
+            
 
             <!-- Documents Field -->
             <div class="form-group row mb-3">
@@ -81,13 +101,13 @@
             <div class="form-group row mb-3">
                 <label for="id_password1" class="col-md-3 col-form-label">Password1:</label>
                 <div class="col-md-9 mt-1">
-                    <input type="password" id="id_password" name="password1" class="form-control">
+                    <input type="password" id="id_password1" name="password1" class="form-control">
                 </div>
             </div>
             <div class="form-group row mb-3">
                 <label for="id_password2" class="col-md-3 col-form-label">Confirn Password:</label>
                 <div class="col-md-9 mt-3">
-                    <input type="password" id="id_password" name="password2" class="form-control">
+                    <input type="password" id="id_password2" name="password2" class="form-control">
                 </div>
             </div>
 
@@ -105,9 +125,13 @@
 
             <!-- Submit Button -->
             <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn  bg-primary text-light" id="submitbtn">Register</button>
+             
             </div>
-
+           
+              
+            
+        
             <div class="border-top pt-3 pb-2 text-center">
                 <small class="text-muted">
                     Already have an account? <a href="{% url 'login' %}">Sign in</a>
@@ -124,5 +148,20 @@
     // Set the 'min' attribute dynamically to hide past dates
     document.getElementById('id_project_start_date').setAttribute('min', today);
     document.getElementById('id_project_end_date').setAttribute('min', today);
+ 
+   
+   
+    document.getElementById('submitbtn').addEventListener('click', function() {
+        let success = document.createElement('div');
+        success.className = "success-popup";
+        success.textContent = "Registration Successful!!!!";
+        document.body.appendChild(success);
+    
+        // Remove pop-up after 3 seconds
+        setTimeout(() => success.remove(), 3000);
+    });
+    
+ 
+ 
 </script>
 {% endblock %}

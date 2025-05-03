@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 class Profile(models.Model):
     user =models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    role = models.CharField(max_length=20,null="True", choices=[('admin', 'Admin'), ('team_user', 'Team User'), ('client', 'Client')])
+  
     username =models.CharField(max_length=200,null=True)
     location =models.CharField(max_length=200,null=True)
     phone_number =models.IntegerField(null=True)

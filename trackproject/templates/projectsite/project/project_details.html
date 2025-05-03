@@ -6,60 +6,22 @@
 
 {% block title %}Project Details{% endblock %}
 {% block content %}
-<h1>Project Details: {{ project.name }}</h1>
+
 
 <!-- Project Overview -->
-<div>
-    <p><strong>Client:</strong> {{ project.client.name }}</p>
+<div class="container p-4 well" style="margin-left:25em; width:632px; margin-top:4em;">
+    <h1>Project Details: {{ project.name }}</h1>
+    <p><strong>Client:</strong> {{ project.client.username }}</p>
     <p><strong>Status:</strong> {{ project.get_status_display }}</p>
-    <p><strong>Start Date:</strong> {{ project.start_date }}</p>
-    <p><strong>End Date:</strong> {{ project.end_date }}</p>
+    <p><strong>Start Date:</strong> {{ project.client.project_start_date }}</p>
+    <p><strong>End Date:</strong> {{ project.client.project_end_date }}</p>
 </div>
 
 <!-- Financial Overview -->
-<div>
+<div class="container p-4 well" style="margin-left:25em; width:632px; margin-top:4em;">
     <h2>Financial Overview</h2>
-    <p><strong>Total Budget:</strong> ₹{{ total_budget }}</p>
-    <p><strong>Total Spent:</strong> ₹{{ total_spent }}</p>
-    <p><strong>Remaining Budget:</strong> ₹{{ remaining_budget }}</p>
+    <p><strong>Total Budget:</strong> ₹{{ project.budget }}</p>
+    
 </div>
 
-<!-- Stages -->
-<div>
-    <h2>Project Stages</h2>
-    <ul>
-        {% for stage in stages %}
-        <li>{{ stage.name }} - {{ stage.get_status_display }}</li>
-        {% empty %}
-        <li>No stages available.</li>
-        {% endfor %}
-    </ul>
-</div>
-
-<!-- Expenses -->
-<div>
-    <h2>Expense Details</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for expense in expenses %}
-            <tr>
-                <td>{{ expense.description }}</td>
-                <td>₹{{ expense.amount }}</td>
-                <td>{{ expense.date }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3">No expenses recorded.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
 {%endblock%}

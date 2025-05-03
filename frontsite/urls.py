@@ -10,11 +10,13 @@ urlpatterns = [
     path('client/<int:id>/update/', views.client_update, name='client_update'),
   #  path('client/<int:client_id>/delete/', views.client_delete_view, name='client_delete'),
     path('clients/', views.client_list, name='client_list'),
+    path('save_projects/', views.save_projects, name='save_projects'),
     path('',views.login_view,name='login'),
     path('logout',views.logout_view,name='logout'),
     path('index/',views.index,name= 'index'),
     path('contactus/',views.contact_us,name='contactus'),
-     path('about/', views.about_us, name='about'), 
+    path('about/', views.about_us, name='about'), 
+    path('client/dashboard/', views.client_dashboard_view, name='client_dashboard_view'),
 ]
 
    

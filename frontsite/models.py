@@ -9,7 +9,7 @@ from django.utils import timezone
 class CustomUser(AbstractUser):
     
     username = models.CharField(max_length=100, unique=True)  # A unique username for the client
-    email = models.EmailField(max_length=255, unique=True, db_index=True) 
+    email = models.EmailField(max_length=255, db_index=True) 
     phone_number = models.CharField(max_length=15, blank=True)  # Client's phone number
     site_location = models.CharField(max_length=255, blank=True)  # Location of the client's site
     site_name = models.CharField(max_length=100, blank=True)  # Site name for identification

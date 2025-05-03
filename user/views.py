@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from .forms import UserUpdateForm,ProfileUpdateForm
 from django.contrib import messages
 from .models import Profile
+from frontsite.models import CustomUser
 # Create your views here.
 
 def profile(request):
@@ -14,7 +15,7 @@ def profile(request):
             u_form.save()
             p_form.save()
             messages.success(request, f'Your account has been updated!')
-            return redirect('/profile_model/')
+            return redirect('profile_model')
  
     else:
         u_form = UserUpdateForm(instance=request.user)
@@ -33,3 +34,6 @@ def profile_model(request):
 
 
 
+def client_profiles(request):
+    clients = CustomUser.objects.filter(role='CLIENT')
+    return render(request, 'user/client_profiles.html', {'clients': clients})

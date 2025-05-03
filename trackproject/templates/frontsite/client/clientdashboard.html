@@ -22,7 +22,7 @@
 
  
 
-  <div class="container-fluid mt-5">
+  <div class="container-fluid mt-5 bg-light">
     <h1 class="text-success " style="font-weight: bold;">Client Dashboard</h1>
     <h2 class="text-secondary mb-5"> Welcome, {{ project_names}}</h2>
     
@@ -42,7 +42,10 @@
                     <td>{{ project.name }}</td>
                     <td>{{ project.status }}</td>
                     <td>${{ project.budget }}</td>
-                    <td>${{ project.total_spent|default:0 }}</td>
+                    <td> {% for expense in expenses %}
+                      ${{ expense.amount_spent }}<br>
+                          {% endfor %}
+  </td>
 
                 </tr>
                
@@ -54,28 +57,31 @@
 
   <!-- Adding charts (if required) -->
   <h2>Project Budgets and Total Spent</h2>
-  <canvas id="projectBudgetChart"></canvas>
+  <canvas id="projectBudgetChart" class="bg-light"></canvas>
   {%block script%}
- 
-<script>
+ <script>
   const ctx = document.getElementById('projectBudgetChart').getContext('2d');
-  const projectNames = JSON.parse('{{ project_names|safe }}');
-  const budgets = JSON.parse('{{ budgets|safe }}');
-  const totalSpents = JSON.parse('{{ total_spents|safe }}');
+  
 
+
+  // Initialize Chart.js
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: projectNames,
+      labels: {{ project_names|safe }}, // Correct labels array
       datasets: [
         {
           label: 'Budget',
-          data: budgets,
+          data: {{ budgets|safe }},
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(255, 159, 64, 1)',
+
         },
         {
           label: 'Total Spent',
-          data: totalSpents,
+          data:[{% for expense in expenses %}  {{ expense.amount_spent }},  {% endfor %}],
+        
+            
           backgroundColor: 'rgba(255, 99, 132, 0.6)',
         },
       ],
@@ -88,6 +94,7 @@
     },
   });
 </script>
+
 
 
 

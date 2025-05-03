@@ -5,19 +5,19 @@ from frontsite.models import CustomUser
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum
 from django.contrib import messages
-from django.http import HttpResponseForbidden
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.core.paginator import Paginator
 from django.core.mail import send_mail
-from django.core.serializers.json import DjangoJSONEncoder
+
+import datetime
+
 from datetime import date
-import json
+
 
 User = get_user_model()
 from django.shortcuts import render
 from django.db.models import Sum, F, ExpressionWrapper, DecimalField
-
+@login_required
 def manage_projects(request):
     # Fetch all projects and calculate total expenses and total land area dynamically
     projects = Project.objects.annotate(
@@ -58,7 +58,7 @@ def project_list(request, client_id=None):
         projects = Project.objects.filter(client_id=client_id)
     else:
         projects = Project.objects.all()
-        project_page =Paginator(projects,1)
+        project_page =Paginator(projects,5)
         project_list= request.GET.get('page')
         project_page= project_page.get_page(project_list)
     return render(request, 'projectsite/project/project_list.html', {'projects': project_page})
@@ -67,7 +67,7 @@ def project_list(request, client_id=None):
 @login_required
 def project_details(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-    return render(request, 'projectsite/project/project_detail.html', {'project': project})
+    return render(request, 'projectsite/project/project_details.html', {'project': project})
 
 
 def project_list_by_client(request, client_id):
@@ -79,41 +79,34 @@ def project_list_by_client(request, client_id):
 @login_required
 # Create a new project only for admin
 def project_add_view(request):
-    if request.method == "POST":
-        form = ProjectForm(request.POST)
-        if form.is_valid():
-            form.save()  
-          # Recipient list
-            budget_email_subject = "Your Weekly Budget Update"
-            budget_email_message = f"""
-            Hi {CustomUser.username},
+    form = ProjectForm(request.POST or None)
+  
+      
+    project = Project.objects.filter(client=request.user).first() 
 
-            Here's your budget update:
-            - Income: ₹50,000
-            - Expenses: ₹30,000
-            - Savings: ₹20,000
+    if request.method == "POST" and form.is_valid():
+            project = form.save()  # Save project after form validation
+            subject = "Welcome to Leaf Construction!"
+            message = f"""
+                    <html>
+                        <body  style="padding:2px;">
+                            <p>Welcome  {request.user.username},</p>
+                            <p>Your project name is ,<strong>{project.name}</strong> has a budget of <strong>₹{project.budget}</strong>.</p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                    </html>
+                """
 
-            Thank you for using our services.
-
-            Best regards,
-            The Leaf Construction Team
-            """
             send_mail(
-                budget_email_subject,
-                budget_email_message,
-                'dglkarthika97@gmail.com',
-                [CustomUser.email]
-            )
-
-        
-
-        return redirect('project_list')
-           
-
-
-    else:
-        form = ProjectForm()
-    return render(request, 'projectsite/project/project_add.html', {'form': form})
+                    subject,
+                    "Welcome to Leaf Construction! Your project details are included in this email.",
+                    'dglkarthika97@gmail.com',  # From email
+                    ['dglkarthika97@gmail.com'],  # Recipient list
+                    fail_silently=False,
+                    html_message=message  # Sending HTML-formatted email
+                )
+            return redirect('project_list')
+    return render(request, "projectsite/project/project_add.html", {"form": form, "project": project})
 
 
 
@@ -189,19 +182,20 @@ def status_update_view(request, project_id):
     return render(request, 'projectsite/status_update.html', context)
 
 
-
+@login_required
 def admin_dashboard_view(request):
           user_count =User.objects.count() or 0
           active_user =User.objects.filter(is_active=True).count() or 0
           current_month =date.today().month
           new_users = User.objects.filter(date_joined__month=current_month).count()
           project =Project.objects.all()
-          ongoing_projects =Project.objects.filter(status='not_started').count()
+          ongoing_projects =Project.objects.filter(status='in_progress').count()
           completed_projects=Project.objects.filter(status='completed').count()
           project_count=Project.objects.count()
-          client=CustomUser.objects.all()
+          clients=CustomUser.objects.all()
           client_count =CustomUser.objects.count()
-          expenses =Expense.objects.all()
+          expenses = Expense.objects.all()
+
           return render(request, 'projectsite/admin/admindashboard.html', {
                                                                            'user_count':user_count,
                                                                            'completed_projects':completed_projects,
@@ -211,7 +205,8 @@ def admin_dashboard_view(request):
                                                                            'total_client':client_count,
                                                                            'expenses':expenses,
                                                                            'project_count':project_count,
-                                                                           'ongoing_projects':ongoing_projects
+                                                                           'ongoing_projects':ongoing_projects,
+                                                                           'clients':clients,
                                                                            }
                                                                            )
 @login_required
@@ -224,7 +219,69 @@ def stage_create(request, project_id):
             stage = form.save(commit=False)
             stage.project = project
             stage.save()
-            return redirect('stage_list', project_id=project.id)
+   
+            subject = "Welcome to Leaf Construction!"
+            # Determine email message based on project status
+            if project.status == "not_started":
+                message = f"""
+                    <html>
+                        <body> 
+                            <p> Welcome ,</p>
+                            <p>Your project <strong>{project.name}</strong> is  <strong>{stage.status}</strong> it is scheduled to start soon.</p>
+                            
+                            <p>Your project is in  <strong>{stage.stage_type}</strong> level.</p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                    </html>
+                """
+            elif project.status == "in_progress":
+                message = f"""
+                    <html>
+                        <body>
+                            <p> Welcome ,</p>
+                            <p>Hi {request.user.username},</p>
+                            <p>Your project <strong>{project.name}</strong> is currently  <strong>{stage.status}</strong>.</p>
+                             
+                            <p>Your project  is in <strong>{stage.stage_type}</strong>level.</p>
+                            <p>Keep an eye on the updates.</p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                    </html>
+                """
+            elif project.status == "completed":
+                message = f"""
+                    <html>
+                        <body>
+                            <p> Welcome ,</p>
+                            <p>Congratulations! Your project <strong> {project.name}</strong> has been <strong>{stage.status}</strong> Successfully.</p>
+                             
+                            <p>Your project is in <strong>{stage.stage_type}</strong> level.</p>
+                            <p>We appreciate your trust in us.</p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                    </html>
+                """
+            else:
+                message = f"""
+                    <html>
+                        <body>
+                            <p> Welcome ,</p>
+                            <p>Your project status has been updated.</p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                    </html>
+                """
+
+            send_mail(
+                subject,
+                "Welcome to Leaf Construction! Your project details are included in this email.",
+                'dglkarthika97@gmail.com',  # From email
+                ['dglkarthika97@gmail.com'],  # Recipient list
+                fail_silently=False,
+                html_message=message  # Sending HTML-formatted email
+            )
+            return redirect('stage_list', project_id=project.id) 
+
     else:
         form = StageForm()
     return render(request, 'projectsite/stage/stage_add.html', {'form': form, 'project': project})
@@ -301,6 +358,34 @@ def expense_new(request, project_id):
             expense = form.save(commit=False)
             expense.project = project
             expense.save()
+            subject = "Welcome to Leaf Construction!Expense and Total spent"
+            message = f"""
+                    <html>
+                        <body  style="padding:2px;">
+                            <p>Welcome  {request.user.username},</p>
+                            <p>Your project name is ,<strong>{project.name}</strong> has a budget of <strong>₹{project.budget}</strong>.
+                            </p>
+                            <p>The total spent of your project is:{expense.amount_spent}</p>
+                            <p>📅 Today's date: <strong>{datetime.today().strftime('%d-%m-%Y')}</strong></p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+
+
+                        
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                        </html>
+                                    
+                      
+                """
+
+            send_mail(
+                    subject,
+                    "Welcome to Leaf Construction! Your project details are included in this email.",
+                    'dglkarthika97@gmail.com',  # From email
+                    ['dglkarthika97@gmail.com'],  # Recipient list
+                    fail_silently=False,
+                    html_message=message  # Sending HTML-formatted email
+                )
             return redirect('expense_details', project_id=project.id, expense_id=expense.id)
     else:
         form = ExpenseForm()

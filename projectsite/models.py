@@ -21,6 +21,7 @@ class Project(models.Model):
     length = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Length (feet)")
     breadth = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True, verbose_name="Breadth (feet)")
     land_area = models.DecimalField(max_digits=10, decimal_places=2, null=True, verbose_name="Total Land Area (sq ft)")
+    
     def save(self, *args, **kwargs):
        
         # Dynamically calculate total land area if length and breadth are provided

@@ -15,6 +15,26 @@
     
 
 }
+.card{
+            
+    margin: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    border: 2px solid black;
+    border-radius: 5px;
+   
+}
+.con{
+            margin-bottom: 10px;
+            margin-top: 30px;
+        
+
+
+}
+
+
 
 .form-popup {
     display: none;
@@ -30,7 +50,7 @@ body {
     
     background: linear-gradient(135deg, #f0f8ff, #b0c4de, #e6e6fa); /* Gradient background */
     color: #333333; /* Dark Grey */
-    animation: gradientShift 10s infinite alternate; /* Animation effect */
+    animation: gradientShift 5s infinite alternate; /* Animation effect */
 }
 
 .sidebar-custom {
@@ -118,4 +138,36 @@ h1, p {
 }
 .logo{
     width:200px;
+}
+.loader{
+    position:fixed;
+    display: flex;
+    align-items: center;
+    top: 0;
+    left: 0;
+    justify-content: center;
+    transition: opacity 0.75s,visibility 0.75s;
+}
+.loader::after {
+    width: 120px;
+    height: 120px;
+    border: 15px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 15px solid cyan; /* Fixing border-top issue */
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+#submitbtn{
+    top:50%;
+    left:50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:#f3f4f5;
+    text:Light;
+    
 }
