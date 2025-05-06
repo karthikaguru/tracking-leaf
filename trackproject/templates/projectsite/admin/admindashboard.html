@@ -11,6 +11,7 @@
     #budgetChart,#spentChart {
         width:40%;
         height: 300px;
+        background-color: aliceblue;
     }
 </style>
 
@@ -30,9 +31,8 @@
                 <div class="card-header"  style="background-color:  rgb(14, 84, 14);" >
                     User Statistics
                 </div>
-                <div class="card-body"  >
+                <div class="card-body" style="height: 155px;width:200;" >
                     <p>Total Users: {{ user_count }}</p>
-                    <p>Active Users: {{ active_user }}</p>
                     <p>New Users (This Month): {{ new_users }}</p>
                 </div>
             </div>
@@ -43,10 +43,12 @@
                 <div class="card-header"  style="background-color:  rgb(80, 5, 59);">
                     Project Statistics
                 </div>
-                <div class="card-body">
+                <div class="card-body" style="height: 155px;width:200;">
                     <p>Total Projects: {{ project_count }}</p>
                     <p>Ongoing Projects: {{ ongoing_projects }}</p>
                     <p>Completed Projects: {{ completed_projects }}</p>
+                    <p>Not Started Projects: {{ not_started }}</p>
+
                 </div>
             </div>
         </div>
@@ -55,7 +57,8 @@
                 <div class="card-header"  style="background-color:  rgb(6, 73, 87);">
                     Client Information
                 </div>
-                <div class="card-body" style="height: 150px;" >
+                <div class="card-body" style="height: 155px;width:200;" >
+                    
                     <p>Total Clients: {{ total_client }}</p>
                 </div>
             </div>
@@ -77,6 +80,7 @@
     <div class="container con" style="margin-bottom: 13px;">
         <div class="row justify-content-center">
             {% for client in clients %}
+               {% if not client.is_superuser %}
                 <div class="col-md-4 d-flex">
                     <div class="card p-1 w-100">
                         <div class="row align-items-center">
@@ -96,6 +100,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             {% endfor %}
         </div>
     </div>
@@ -124,8 +129,9 @@
                 'rgba(255, 206, 86, 0.8)',  // Yellow
                 'rgba(75, 192, 192, 0.8)',  // Teal
                 'rgba(153, 102, 255, 0.7)' ,
-                
-              
+                'rgba(75, 192, 192, 0.8)',  // Teal
+                'rgba(153, 102, 255, 0.7)'  // Purple
+            
                     ],
 
                 borderColor: 'rgba(75, 192, 192, 1)',
@@ -146,19 +152,23 @@
     // Line Chart for Total Spent
     const ctx2 = document.getElementById('spentChart').getContext('2d');
     new Chart(ctx2, {
-        type: 'pie', // Chart type
+        type: 'doughnut', // Chart type
         data: {
             labels: [{% for expense in expenses %} '{{expense.project.name}}', {%endfor%}], // X-axis: Project names
             datasets: [{
                 label: 'Total Spent (₹)',
                 data: [{% for expense in expenses %} {{expense.amount_spent}}, {%endfor%}], // Y-axis: Total spent values
                 backgroundColor: [
-              
+                
                 'rgba(54, 162, 235, 0.8)',  // Blue
-                'rgba(255, 99, 132, 0.8)',  // Red
-                'rgba(255, 206, 86, 0.8)',  // Yellow
+               
                 'rgba(75, 192, 192, 0.8)',  // Teal
                 'rgba(153, 102, 255, 0.7)' ,
+                'rgba(75, 192, 192, 0.8)',  // Teal
+                'rgba(153, 102, 255, 0.7)'  ,// Purple
+                'rgba(255, 99, 132, 0.8)',  // Red
+                'rgba(255, 206, 86, 0.8)',  // Yellow
+               
                     ],
                 borderColor: 'rgba(153, 102, 255, 1)',
                 borderWidth: 2,

@@ -7,20 +7,15 @@
 
 {% block content %}
 <div class="container p-4 well " style="margin-left:25em ;width:632px;margin-top:4em">
-    <h2 class="text-center">Edit Client :{{ client.name }}</h2>
+    <h2 class="text-center">Edit Client :{{user.username }}</h2>
     <form method="post" enctype="multipart/form-data" autocomplete="off" style="width: 100%;">
         {% csrf_token %}
-        <div class="row mb-3" style="margin-top: 3px;">
-            <label for="id_user" class="col-sm-3 col-form-label">User :</label>
-            <div class="col-sm-9">
-                {{ form.user }}
-            </div>
-        </div>
+      
 
         <div class="row mb-3">
             <label for="id_name" class="col-sm-3 col-form-label" autocomplete="off">Name:</label>
             <div class="col-sm-9">
-                {{ form.name }}
+                {{ form.username }}
             </div>
         </div>
 

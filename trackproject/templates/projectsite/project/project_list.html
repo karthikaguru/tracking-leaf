@@ -61,7 +61,7 @@
     <div class="container">
         <div class="col-md-12 offset-md-9">
             <nav aria-label="Page navigation example">
-                <ul class="pagination">
+                <ul class="pagination"  id="paginationDropdown">
                   {% if projects.has_previous%}
                      <li class="page-item"><a class="page-link" href="{% url 'project_list'%}?page={{projects.previous_page_number}}">Previous</a></li>
                   {% endif %}
@@ -76,6 +76,19 @@
                   {% endif %}
                 </ul>
               </nav>
-        </div>
-    </div>
+              <select class="form-select" aria-label="Default select example" id="paginationDropdown" style="width: 100px;">
+                {% for num in projects.paginator.page_range %}
+                    <option value="{{ num }}" {% if projects.number == num %}selected{% endif %}>Page {{ num }}</option>
+                {% endfor %}
+            </select>
+
+</div>
+</div> 
+    <script>
+        function changePage() {
+            let selectedPage = document.getElementById("paginationDropdown").value;
+            window.location.href = "?page=" + selectedPage;
+        }
+    </script>
+    
 {% endblock %}

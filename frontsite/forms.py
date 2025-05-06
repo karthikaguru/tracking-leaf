@@ -8,7 +8,7 @@ class UserRegistrationForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'placeholder': 'Enter your password',
-            'autocomplete': 'off'
+            'autocomplete': 'new-password'
         })
     )
      password2 = forms.CharField(
@@ -16,7 +16,7 @@ class UserRegistrationForm(forms.ModelForm):
         widget=forms.PasswordInput(attrs={
             'class': 'form-control',
             'placeholder': 'Confirm your password',
-            'autocomplete': 'off'
+            'autocomplete': 'new-password'
         })
     )
 
@@ -35,10 +35,24 @@ class UserRegistrationForm(forms.ModelForm):
             'site_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter the site name', 'autocomplete': 'off'}),
             'project_start_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'autocomplete': 'off'}),
             'project_end_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control', 'autocomplete': 'off'}),
-            'documents': forms.FileInput(attrs={'class': 'form-control'}),
-            'role': forms.Select(attrs={'class': 'form-control'}) 
+            
+          
         }
-        
+     def clean_phone_number(self):
+            
+                phone_number = self.cleaned_data.get("phone_number")
+
+                if not phone_number.isdigit():
+                    raise forms.ValidationError("Phone number must contain only digits.")
+
+                if len(phone_number) != 10:
+                    raise forms.ValidationError("The phone number must be exactly 10 digits.")
+
+                return phone_number
+
+     
+   
+      
 
 
 

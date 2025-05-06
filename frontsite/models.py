@@ -10,7 +10,7 @@ class CustomUser(AbstractUser):
     
     username = models.CharField(max_length=100, unique=True)  # A unique username for the client
     email = models.EmailField(max_length=255, db_index=True) 
-    phone_number = models.CharField(max_length=15, blank=True)  # Client's phone number
+    phone_number = models.CharField(max_length=10, blank=True)  # Client's phone number
     site_location = models.CharField(max_length=255, blank=True)  # Location of the client's site
     site_name = models.CharField(max_length=100, blank=True)  # Site name for identification
     project_start_date = models.DateField(blank=True, null=True)  # Nullable start date for client's project
@@ -49,6 +49,10 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-  
+    def save(self, *args, **kwargs):
+        if not self.documents:
+            self.documents = None  # Avoid unnecessary uploads
+        super().save(*args, **kwargs)
+
 
 

@@ -6,10 +6,12 @@
 {% block title %}Profile page{% endblock %}
 {% block content%}
 <div class ="container  border bordered bg-light p-3" style="margin: 450px;margin-top:106px;width:350px">
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{u_form.as_p}} 
-    {{p_form.as_p}}
-    <input type="submit" value="submit">
-</form>
+    
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{u_form.as_p}} 
+            {{p_form.as_p}}
+            <input type="submit" value="submit">
+        </form>
+        </div>
 {% endblock %}  

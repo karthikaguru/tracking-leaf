@@ -25,6 +25,8 @@
             </thead>
             <tbody>
                 {% for client in clients.object_list %}
+                {% if not client.is_superuser %}
+
                 <tr>
                     <td>{{ client.username }}</td>
                     <td>{{ client.phone_number }}</td>
@@ -39,6 +41,7 @@
                      
                     </td>
                 </tr>
+                {%endif%}
                 {% endfor %}
             </tbody>
         </table>

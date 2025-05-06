@@ -13,6 +13,7 @@ from django.utils import timezone
 
 def register(request):
     if request.method == 'POST':
+        
         username = request.POST.get('username')
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
@@ -50,9 +51,14 @@ def register(request):
 
             site_name=site_name,
             project_start_date=project_start_date,
-            project_end_date=project_end_date
+            project_end_date=project_end_date,
+            role='client',
         )
-       
+        user.save()
+
+        # Log the user in after successful registration
+        login(request, user)
+        messages.success(request, 'You have successfully registered. Welcome, {}!'.format(user.username))
         # Send email after project is created
         subject = "Welcome to Leaf Construction!"
         message = f"""
@@ -63,7 +69,7 @@ def register(request):
                     <p>📅Project  Start Date: <strong>{project_start_date}</strong></p>
                     <p>🚀Project End Date: <strong>{project_end_date}</strong></p>
                    
-                    <h3>Best regards
+                    <h3>Best regards</h3>
                     <h3>The Leaf Construction Team</h3>
                 </body>
             </html>
@@ -76,33 +82,10 @@ def register(request):
             ['dglkarthika97@gmail.com'],  # Recipient email
             fail_silently=False,
             html_message=message  # HTML-formatted email
-        )
-     
-    
-
-        # Assign the appropriate role
-        if role == 'admin':
-            user.role = CustomUser.ADMIN
-        elif role == 'team_user':
-            user.role = CustomUser.TEAM_USER
-        elif role == 'client':
-            user.role = CustomUser.CLIENT
-        else:
-            messages.warning(request, 'Invalid role selected. Please try again.')
-            return redirect('register')  # Redirect back if role is invalid
-
-        # Save the user with assigned role
-        
+        )  
        
-        user.save()
-
-        # Log the user in after successful registration
-        login(request, user)
-        messages.success(request, 'You have successfully registered. Welcome, {}!'.format(user.username))
-        return redirect('/')  # Redirect to a common dashboard or homepage
-
-    # For GET requests, render the registration form
-    return render(request, 'frontsite/register.html')
+       
+    return render(request, 'frontsite/register.html') 
 
 
 def login_view(request):
@@ -128,7 +111,7 @@ def login_view(request):
                     return redirect('site/projects/')
                 elif user.role == CustomUser.CLIENT:
                        if Project.objects.filter(client=user).exists():  
-                                return redirect('site/projects/')  # Redirect to project list
+                                return redirect('client/dashboard/')  # Redirect to project list
                        else:
                                 return redirect('site/projects/add/')  
                 else:
@@ -160,47 +143,37 @@ def about_us(request):
 
 def client_list(request):
      client =CustomUser.objects.all()
-     page=Paginator(client,2)
+     page=Paginator(client,5)
      page_list =request.GET.get('page')
      page=page.get_page(page_list)
      return render(request, 'frontsite/client/client_list.html',{'clients':page})
 
-def client_update(request,id):
-       
-       user =CustomUser.objects.get(id=id)
-       if request.method == "POST":
-           form = UserRegistrationForm(request.POST,instance=user)
-           if form.is_valid():
-                form.save()
-                if user.project_end_date and user.project_end_date < timezone.now().date():
-                    subject = "Update Your Project Deadline!"
-                    update_link = f"http://127.0.0.1:8000/update-deadline/{user.id}/"
-
-                    message = f"""
-                        <html>
-                            <body style="padding:2px;">
-                                <p>Dear {request.user.username},</p>
-                                <p>Your project <strong>{user.name}</strong> is overdue! Please <a href="{update_link}">click here</a> to update your deadline.</p>
-                                <p>Best regards,<br>The Leaf Construction Team</p>
-                            </body>
-                        </html>
-                    """
-
-                    send_mail(
-                        subject,
-                        "Your project deadline has passed. Click the link to update it.",
-                        'dglkarthika97@gmail.com',
-                        [request.user.email],  # Send to project owner
-                        fail_silently=False,
-                        html_message=message
-                    )
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import CustomUser
+from .forms import UserRegistrationForm
 
 
-       return render(request, 'frontsite/client/client_edit.html',{'clients':form})
+@login_required
+def client_update(request, id):
+    user = get_object_or_404(CustomUser, id=id)
+
+    if request.method == "POST":
+        form = UserRegistrationForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("client_list")
+
+
+    else:
+        form = UserRegistrationForm(instance=user)
+
+    return render(request, "frontsite/client/client_edit.html", {"form": form,'user':user})
+
 
 def save_projects(request):
      user =CustomUser.objects.all()
-     page =Paginator(user,4)
+     page =Paginator(user,5)
      page_list =request.GET.get('page')
      page =page.get_page(page_list)
 

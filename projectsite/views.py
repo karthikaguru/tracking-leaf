@@ -12,6 +12,7 @@ from django.core.mail import send_mail
 import datetime
 
 from datetime import date
+from datetime import datetime
 
 
 User = get_user_model()
@@ -58,7 +59,7 @@ def project_list(request, client_id=None):
         projects = Project.objects.filter(client_id=client_id)
     else:
         projects = Project.objects.all()
-        project_page =Paginator(projects,5)
+        project_page =Paginator(projects,4)
         project_list= request.GET.get('page')
         project_page= project_page.get_page(project_list)
     return render(request, 'projectsite/project/project_list.html', {'projects': project_page})
@@ -120,6 +121,7 @@ def project_edit_view(request, project_id):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
+            
             messages.success(request, 'Project updated successfully!')
             return redirect('project_list')  # Redirect to project list
     else:
@@ -185,22 +187,22 @@ def status_update_view(request, project_id):
 @login_required
 def admin_dashboard_view(request):
           user_count =User.objects.count() or 0
-          active_user =User.objects.filter(is_active=True).count() or 0
           current_month =date.today().month
           new_users = User.objects.filter(date_joined__month=current_month).count()
           project =Project.objects.all()
           ongoing_projects =Project.objects.filter(status='in_progress').count()
           completed_projects=Project.objects.filter(status='completed').count()
+          not_started=Project.objects.filter(status='not_started').count()
           project_count=Project.objects.count()
           clients=CustomUser.objects.all()
-          client_count =CustomUser.objects.count()
+          client_count =CustomUser.objects.filter(is_superuser=False).count()
           expenses = Expense.objects.all()
 
           return render(request, 'projectsite/admin/admindashboard.html', {
                                                                            'user_count':user_count,
                                                                            'completed_projects':completed_projects,
                                                                            'new_users':new_users,
-                                                                           'active_user':active_user,
+                                                                           'not_started':not_started,
                                                                            'project':project,
                                                                            'total_client':client_count,
                                                                            'expenses':expenses,
@@ -300,6 +302,28 @@ def stage_edit(request, stage_id):
         form = StageForm(request.POST, instance=stage)
         if form.is_valid():
             form.save()
+            subject = "Welcome to Leaf Construction!"
+            # Determine email message based on project status
+            message = f"""
+                    <html>
+                        <body> 
+                            <p> Welcome client ,</p>
+                            <p>Currently , we are working in your project.we happy to share the updates .<p>
+                            <p>Your project <strong>{project.name}</strong> is currently  <strong>{stage.status}</strong>.</p>
+                            
+                            <p>Your project is in  <strong>{stage.stage_type}</strong> level.</p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                    </html>
+                """
+            send_mail(
+                subject,
+                "Welcome to Leaf Construction! Your project details are included in this email.",
+                'dglkarthika97@gmail.com',  # From email
+                ['dglkarthika97@gmail.com'],  # Recipient list
+                fail_silently=False,
+                html_message=message  # Sending HTML-formatted email
+            )
             return redirect('stage_list', project_id=project.id)
     else:
         form = StageForm(instance=stage)
@@ -362,10 +386,11 @@ def expense_new(request, project_id):
             message = f"""
                     <html>
                         <body  style="padding:2px;">
-                            <p>Welcome  {request.user.username},</p>
+                            <p>Welcome Client,</p>
+                            <p>Currently , we are working in your project.we happy to share the updates .<p>
                             <p>Your project name is ,<strong>{project.name}</strong> has a budget of <strong>₹{project.budget}</strong>.
                             </p>
-                            <p>The total spent of your project is:{expense.amount_spent}</p>
+                            <p>The total spent of your project is:<strong>{expense.amount_spent}<strong></p>
                             <p>📅 Today's date: <strong>{datetime.today().strftime('%d-%m-%Y')}</strong></p>
                             <p>Best regards,<br>The Leaf Construction Team</p>
 
@@ -433,6 +458,34 @@ def expense_edit(request, project_id, expense_id):
             expense = form.save(commit=False)
             expense.project = project
             expense.save()
+            subject = "Welcome to Leaf Construction!Expense and Total spent"
+            message = f"""
+                    <html>
+                        <body  style="padding:2px;">
+                            <p>Welcome  Client ,</p>
+                             <p>Currently , we are working in your project.we happy to share the updates .<p>
+                            <p>Your project name is ,<strong>{project.name}</strong> has a budget of <strong>₹{project.budget}</strong>.</p>
+                            <p>The total spent of your project is:<strong>{expense.amount_spent}<strong></p>
+                            <p>📅 Today's date: <strong>{datetime.today().strftime('%d-%m-%Y')}</strong></p>
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+
+
+                        
+                            <p>Best regards,<br>The Leaf Construction Team</p>
+                        </body>
+                        </html>
+                                    
+                      
+                """
+
+            send_mail(
+                    subject,
+                    "Welcome to Leaf Construction! Your project details are included in this email.",
+                    'dglkarthika97@gmail.com',  # From email
+                    ['dglkarthika97@gmail.com'],  # Recipient list
+                    fail_silently=False,
+                    html_message=message  # Sending HTML-formatted email
+                )
             return redirect('expense_details', project_id=project.id, expense_id=expense.id)
     else:
         form = ExpenseForm(instance=expense)

@@ -9,29 +9,30 @@
 {% block content %}
 <style>
     body {
-        background-image: url('images/image.png');
+        background-image: url('images/bg1.jpg');
         background: linear-gradient(90deg);
         background-size: 100% 100%;
         animation: gradientShift 15s infinite;
-    
         background-position:fixed ;
     }
 </style>
 
-<div class="container-fluid create well table-responsive d-flex justify-content-center align-items-center " style="margin-left:27em;width: 500px; margin-top: 11em;">
+<div class="container-fluid create fs-5  table-responsive d-flex justify-content-center align-items-center bg-info" style="margin-left:30em;width: 500px; margin-top: 11em; background-size: cover;border-radius :10%;padding: 30px;
+    opacity: 0.7;">
+
     <div class="row p-3">
         <!-- Brand Heading -->
-        <h1 class="pb-3 text-center" style="color: rgb(75, 42, 165);">Leaf Construction</h1>
+        <h1 class="pb-3 text-center" style="color: rgb(165, 42, 106);">Leaf Construction</h1>
         
         <!-- Display Django Messages -->
-        {% if messages %}
+
         {% for message in messages %}
+        {% if message %}
             <div class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
+        {% endif %}
         {% endfor %}
-    {% endif %}
-    
 
         <!-- Login Form -->
         <form method="POST" action="{% url 'login' %} " autocomplete="off">
@@ -54,7 +55,7 @@
             
             <!-- Password Field -->
             <div class="form-group row mb-3 popup"  >
-                <label for="email" class="col-sm-3 col-form-label">password:</label>
+                <label for="email" class="col-sm-3 col-form-label">Password:</label>
                 <div class="col-sm-9">
                     <input type="password" style="display: none;">
                     <input 
@@ -73,7 +74,7 @@
                 
                 <div class="form-group text-center">
                     <!-- Reset Button -->
-                    <button type="submit" class="btn btn-primary">Login</button>
+                    <button type="submit"  style="background-color:black;color:aliceblue;padding-left: 20px;padding-right:3%;border-radius: 9px;" class="login">Login</button>
                              
                     
                     <p class="mt-3">
@@ -96,6 +97,7 @@
 <!-- jQuery Script to Auto-Hide Messages -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+    
     $(document).ready(function () {
         // Hides the message after 5 seconds (5000ms)
             $('.alert').hide(10000);

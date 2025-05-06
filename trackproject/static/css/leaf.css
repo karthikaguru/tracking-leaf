@@ -2,7 +2,7 @@
 .well {
     padding: 1px;
     border-radius: 5%;
-    background-color:  #94b5d3;
+    background-color: #94b5d3; 
     margin:130px;
     margin-left:580px;
     margin-top: 100px;
@@ -125,7 +125,7 @@ h1, p {
     margin-top: 0px;
 }
 .create{
-    background-color: #94b5d3;
+    background-color: #94b5d3; 
     font-size: 19px ;
     
 }
@@ -168,6 +168,6 @@ h1, p {
     align-items: center;
     justify-content: center;
     background-color:#f3f4f5;
-    text:Light;
+    color:Light;
     
 }

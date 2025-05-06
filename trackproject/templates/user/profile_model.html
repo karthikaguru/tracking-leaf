@@ -13,16 +13,20 @@
     }
     
 </style>
-<div class ="container bg-light p-3" style="margin: 450px;margin-top:100px;width:550px;height:300px;">
+   
+         <div class ="container bg-light p-3" style="margin: 450px;margin-top:100px;width:550px;height:300px;">
   
       
            <h1 class="bg-info ">PROFILE INFORMATION</h1>
+           {% if not user.is_superuser %} 
            <p style="margin-left:420px;margin-top:10px;" class="btn  bg-warning btn-outline-success "><a href="{% url 'profile'%}">Update</a></p>
+           {% endif %}
            <div class="profile-container">    
                   
-            <h5 class="pt-2">Userename: <strong style="margin-left:40px;">{{user.username}}</strong></h5>
+            <h5 class="pt-2">Username: <strong style="margin-left:40px;">{{user.username}}</strong></h5>
             <h5 class="pt-1">Email:<strong style="margin-left:95px;">{{user.email}}</strong></h5>
-            <h5 class="pt-1">phone_number:<strong style="margin-left:5px;">{{user.phone_number}}</strong></h5>
+            {% if not user.is_superuser %} 
+            <h5 class="pt-1">PhoneNumber:<strong style="margin-left:5px;">{{user.phone_number}}</strong></h5>
             <h5>location:<strong style="margin-left:70px;;">{{user.profile.location}}</strong></h5>
             {% if user.profile.image %}
                  <img src="{{user.profile.image.url}}"  alt="Profile picture of {{ user.username }}"  width="100px" height="100px" class="d-flex" style="margin-left: 400px;margin-top:-25%;border-radius:30%;" >
@@ -31,4 +35,5 @@
             {% endif %}
                 
             </div>
+{% endif %}
  {% endblock %}    
