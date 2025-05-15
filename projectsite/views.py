@@ -59,10 +59,13 @@ def project_list(request, client_id=None):
         projects = Project.objects.filter(client_id=client_id)
     else:
         projects = Project.objects.all()
-        project_page =Paginator(projects,4)
+        project_page =Paginator(projects,5)
         project_list= request.GET.get('page')
         project_page= project_page.get_page(project_list)
     return render(request, 'projectsite/project/project_list.html', {'projects': project_page})
+
+
+
 
 
 @login_required
@@ -115,15 +118,16 @@ def project_add_view(request):
 # Allow Admins, Team Users, and Clients  Admins can edit any project
 def project_edit_view(request, project_id):
     project = get_object_or_404(Project, id=project_id)
-
+    client_id = project.client.id 
     
     if request.method == 'POST':
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
             
-            messages.success(request, 'Project updated successfully!')
-            return redirect('project_list')  # Redirect to project list
+         
+            return redirect('project_list_by_client', client_id=client_id) 
+         
     else:
         form = ProjectForm(instance=project)
 
@@ -143,9 +147,10 @@ def project_list_view(request):
 @login_required
 def project_delete_view(request, project_id):
     project = Project.objects.get(id=project_id)
+    client_id = project.client.id 
     if request.method == 'POST':
         project.delete()
-        return redirect('project_list')  
+        return redirect('project_list_by_client', client_id=client_id) 
     return render(request, 'projectsite/project/project_delete.html', {'project': project})
 
 

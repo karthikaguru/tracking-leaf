@@ -8,11 +8,11 @@
 
 {% block content %}
     <div class="container mt-5">
-        <div class="table-responsive bg-light" style="margin-left:20em; margin-top:5em; width:auto;">
+        <div class="table-responsive bg-light text-center" style="margin-left:15em; margin-top:10em; width:1250px;">
             <h1>Project List</h1>
         
-            <table class="table table-striped table-bordered table-hover ">
-                <thead class="mb-4">
+            <table class="table table-striped table-bordered table-hover">
+                <thead class="mb-4 mt-5">
                     <tr>
                         <th>Client</th>
                         <th>Name</th>                             
@@ -31,25 +31,21 @@
                 <tbody>
                     {% for project in projects %}
                     <tr>
-                        <td>{{ project.client }}</td>
-                        <td>{{ project.name }}</td>
+                        <td>{{ project.client }}  <i class="fa fa-user"></i></td>
+                        <td>{{ project.name }}    <i class="fa fa-user"></i></td>
                         <td>{{ project.budget }}</td>
                         <td>{{ project.length }}</td>
                         <td>{{ project.breadth }}</td>
                         <td style="width: 90px;">{{ project.land_area }}</td>
                       
-                       
-
-                        
-                        <td class="button" >
+                        <td class="button">
                             {% if request.user.role == 'TEAM_USER' %}
                                 <a href="{% url 'project_edit' project.id %}" class="btn btn-info btn-sm m-1 p-2">Update Progress</a>   
                             {% endif %}
                             {% if user.is_authenticated and user.is_staff and user.is_superuser %}
-                                <a href="{% url 'project_edit' project.id %}" class="btn btn-warning text-light btn-sm m-1 p-2">Update</a>
-                                <a href="{% url 'stages_list_by_client' project.id %}" class="btn btn-success btn-sm p-2">View Stages</a>
+                                <a href="{% url 'project_edit' project.id %}" class="btn btn-warning text-light btn-sm m-1 p-2 ">Update</a>
+                                <a href="{% url 'stages_list_by_client' project.id %}" class="btn btn-success btn-sm p-2 ">View Stages</a>
                             {% endif %}
-                        
                         </td>
                     </tr>
                     {% endfor %}
@@ -58,37 +54,54 @@
         </div>
         <a href="{% url 'project_add' %}" class="btn btn-primary mt-3">Add New Project</a>
     </div>
+
+    <!-- Pagination Dropdown -->
     <div class="container">
-        <div class="col-md-12 offset-md-9">
+        <div class="col-md-12 offset-md-11 " style="margin-bottom: 190px;">
+            <p class="text-primary d-flex justify-content-left ">Page:{{projects.number}}/{{projects.paginator.num_pages}}</p>
             <nav aria-label="Page navigation example">
-                <ul class="pagination"  id="paginationDropdown">
-                  {% if projects.has_previous%}
-                     <li class="page-item"><a class="page-link" href="{% url 'project_list'%}?page={{projects.previous_page_number}}">Previous</a></li>
+                <ul class="pagination">
+                  {% if projects.has_previous %}
+                     <li class="page-item"><a class="page-link" href="{% url 'project_list' %}?page={{ projects.previous_page_number }}">Previous</a></li>
                   {% endif %}
+                  
                   {% for num_page in projects.paginator.page_range %}
-                  {% if  projects.number == num_page %}
-                        <li class="page-item active"><a class="page-link" href="{% url 'project_list'%}?page={{num_page}}">{{num_page}}</a></li>
-                
-                        {% endif %}
-                        {% endfor %}
+                      <li class="page-item {% if projects.number == num_page %}active{% endif %}">
+                          <a class="page-link" href="{% url 'project_list' %}?page={{ num_page }}">{{ num_page }}</a>
+                      </li>
+                  {% endfor %}
+                  
                   {% if projects.has_next %}
-                     <li class="page-item"><a class="page-link" href="{% url 'project_list'%}?page={{projects.next_page_number}}">Next</a></li>
+                     <li class="page-item"><a class="page-link" href="{% url 'project_list' %}?page={{ projects.next_page_number }}">Next</a></li>
                   {% endif %}
                 </ul>
-              </nav>
-              <select class="form-select" aria-label="Default select example" id="paginationDropdown" style="width: 100px;">
-                {% for num in projects.paginator.page_range %}
-                    <option value="{{ num }}" {% if projects.number == num %}selected{% endif %}>Page {{ num }}</option>
+            </nav>
+
+            <!-- Pagination Dropdown -->
+            <select id="paginationDropdown" onchange="changePage()">
+                {% for num_page in projects.paginator.page_range %}
+                    <option value="{{ num_page }}" {% if projects.number == num_page %}selected{% endif %}>Page {{ num_page }}</option>
                 {% endfor %}
             </select>
 
-</div>
-</div> 
+    
+        </div>
+    </div> 
+
     <script>
+        // Change Page with Pagination Dropdown
         function changePage() {
             let selectedPage = document.getElementById("paginationDropdown").value;
             window.location.href = "?page=" + selectedPage;
         }
+
+        // Section Visibility Toggle
+        document.getElementById("pageSelector").addEventListener("change", function() {
+            let selectedSection = this.value;
+            document.querySelectorAll(".content-section").forEach(section => {
+                section.style.display = "none"; // Hide all sections
+            });
+            document.getElementById(selectedSection).style.display = "block"; // Show selected section
+        });
     </script>
-    
 {% endblock %}

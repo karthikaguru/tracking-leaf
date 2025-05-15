@@ -10,126 +10,119 @@ from .forms import LoginForm
 from django.core.mail import send_mail
 from projectsite.models import Project,Expense
 from django.utils import timezone
-
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth import login
+from django.core.mail import send_mail
+from .models import CustomUser
+from .forms import UserRegistrationForm
 def register(request):
     if request.method == 'POST':
-        
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        role = request.POST.get('role')  # Set the role explicitly as 'client'
-
-        # Additional fields relevant to the client
-        phone_number = request.POST.get('phone_number')
-        site_location = request.POST.get('site_location')
-        site_name = request.POST.get('site_name')
-        project_start_date = request.POST.get('project_start_date')
-        project_end_date = request.POST.get('project_end_date')
-
-        
-
-        if password1 != password2:
-            messages.warning(request, 'The passwords you entered did not match. Please try again.')
-            return redirect('register')
-    
+        form = UserRegistrationForm(request.POST,request.FILES)
+        if form.is_valid():
+            username =form.cleaned_data['username']
+            password1 = form.cleaned_data['password1']
+            password2 = form.cleaned_data['password2']
+            project_start_date = form.cleaned_data['project_start_date']
+            project_end_date = form.cleaned_data['project_end_date']
+            if password1 != password2:
+                messages.warning(request, 'The passwords you entered did not match. Please try again.')
+                return redirect('register')
+            
         # Check if username already exists
-        if CustomUser.objects.filter(username=username).exists():
-            messages.warning(request, 'Username already taken. Please choose another one.')
-            return redirect('register')
+            if CustomUser.objects.filter(username=username).exists():
+                messages.warning(request, 'Username already taken. Please choose another one.')
+                return redirect('register')
+            user = form.save()  # Create user object but don't save yet
+            user.set_password(form.cleaned_data['password1'])  # Hash password
+            user.save()
+            subject = "Welcome to Leaf Construction!"
+            message = f"""
+                    <html>
+                        <body style="padding:5px;">
+                            <p>Hi {username},<br>You are successfully registered.<br>
+                            Thank you for registering with Leaf Construction. We are happy to have you on board and look forward to delivering exceptional service.</p>
+                            <p>📅 Project Start Date: <strong>{project_start_date}</strong></p>
+                            <p>🚀 Project End Date: <strong>{project_end_date}</strong></p>
+                            <h3>Best regards,</h3>
+                            <h3>The Leaf Construction Team</h3>
+                        </body>
+                    </html>
+                """
 
-        # Check if email already exists
-        
+            send_mail(
+                    subject,
+                    'Welcome to Leaf Construction!',
+                    'dglkarthika97@gmail.com',
+                    ['dglkarthika97@gmail.com'],  # Send email to the registered user
+                    fail_silently=False,
+                    html_message=message
+                )
+            messages.success(request, f'Welcome, {user.username}! You have successfully registered.')
+            return redirect('/')
 
-        # Create the user if validations pass
-        user = CustomUser.objects.create_user(
-            username=username,
-            email=email,
-            password=password1,
-            phone_number=phone_number,
-            site_location=site_location,
+    else:
+        form = UserRegistrationForm()
+    
+    return render(request, 'frontsite//client/client_create.html', {'form': form})
 
-            site_name=site_name,
-            project_start_date=project_start_date,
-            project_end_date=project_end_date,
-            role='client',
-        )
-        user.save()
-
-        # Log the user in after successful registration
-        login(request, user)
-        messages.success(request, 'You have successfully registered. Welcome, {}!'.format(user.username))
-        # Send email after project is created
-        subject = "Welcome to Leaf Construction!"
-        message = f"""
-            <html>
-                <body style="padding:5px;">
-                    <p>Hi {username},<br>You are successfully registered<br>Thank you for registering with Leaf Construction.We are happy to have you on board and look forward to delivering exceptional service.</p>
-  
-                    <p>📅Project  Start Date: <strong>{project_start_date}</strong></p>
-                    <p>🚀Project End Date: <strong>{project_end_date}</strong></p>
-                   
-                    <h3>Best regards</h3>
-                    <h3>The Leaf Construction Team</h3>
-                </body>
-            </html>
-        """
-
-        send_mail(
-            subject,
-            'Welcome to Leaf Construction!',
-            'dglkarthika97@gmail.com',  # Sender email
-            ['dglkarthika97@gmail.com'],  # Recipient email
-            fail_silently=False,
-            html_message=message  # HTML-formatted email
-        )  
-       
-       
-    return render(request, 'frontsite/register.html') 
 
 
 def login_view(request):
-    form = LoginForm()
+    form = LoginForm()  # Retain form data
+    
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
 
-            # Authenticate the user
-            user = authenticate(request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                messages.success(request, 'Login successful!')
-
-                user = request.user  # Get current user
-
-             
-                if user.role == CustomUser.ADMIN:
-                    return redirect('site/admin_dashboard/')
-                elif user.role == CustomUser.TEAM_USER:
-                    return redirect('site/projects/')
-                elif user.role == CustomUser.CLIENT:
-                       if Project.objects.filter(client=user).exists():  
-                                return redirect('client/dashboard/')  # Redirect to project list
-                       else:
-                                return redirect('site/projects/add/')  
+        # Authenticate user
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            messages.success(request, 'Login successful!')
+            
+            # Redirect based on user role
+            if user.role == CustomUser.ADMIN:
+                return redirect('site/admin_dashboard/')
+            elif user.role == CustomUser.TEAM_USER:
+                return redirect('site/projects/')
+            elif user.role == CustomUser.CLIENT:
+                if Project.objects.filter(client=user).exists():
+                    return redirect('client/dashboard/')
                 else:
-                    messages.warning(request, 'Invalid user role. Please contact support.')
-                    return redirect('index')
+                    return redirect('site/projects/add/')
             else:
-                messages.warning(request, 'Invalid credentials. Please try again.')
-                return redirect('login')
+                messages.warning(request, 'Invalid user role. Please contact support.')
+        else:
+            messages.warning(request, 'Invalid credentials. Please try again.')
 
     return render(request, 'frontsite/login.html', {'form': form})
 
+
+
+def client_list(request):
+    # Get 'per_page' from the request, default to 2 if not provided
+    per_page = int(request.GET.get('per_page', 2))  # Default to 2 items per page
+    
+    # Fetch all clients
+    clients = CustomUser.objects.all()
+    
+    # Apply pagination
+    paginator = Paginator(clients, per_page)
+    page_number = request.GET.get('page', 1)  # Default to page 1
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, 'frontsite/client/client_list.html', {'clients': page_obj, 'per_page': per_page})
 
 
 
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out.')
-    return redirect('/')
+    return render(request, 'frontsite/logout.html')
 
 def index(request):
      return render(request, 'frontsite/index.html')
@@ -141,12 +134,16 @@ def contact_us(request):
 def about_us(request):
     return render(request, 'frontsite/about.html')  # Ensure the template exists at this location
 
-def client_list(request):
+def clientlist(request):
      client =CustomUser.objects.all()
-     page=Paginator(client,5)
+     page=Paginator(client,2)
      page_list =request.GET.get('page')
      page=page.get_page(page_list)
      return render(request, 'frontsite/client/client_list.html',{'clients':page})
+     
+
+
+
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages

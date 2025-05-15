@@ -6,12 +6,29 @@
 {% block title %}Client List{% endblock %}
 
 {% block content %}
-    <div class="container-fluid ">
-        <div style="margin-left:16em; margin-top:5em; ">
+<style>
+    .select-container {
+        position: relative;
+    }
+
+    .select-container select {
+        padding-left: 40px; /* Space for the icon */
+    }
+
+    .select-icon {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: gray;
+    }
+</style>
+
+<div class="container-fluid">
+    <div style="margin-left:16em; margin-top:5em;">
         <h1>Client List</h1>
-        <table class="table  table-striped table-hover table-bordered bg-light text-center p-3 m-3 ">
-          
-            <thead class="p-3 m-3"    style="color: blue;">
+        <table class="table table-striped table-hover table-bordered bg-light text-center p-3 m-3">
+            <thead class="p-3 m-3" style="color: blue;">
                 <tr>
                     <th>Name</th>
                     <th>Phone Number</th>
@@ -26,46 +43,74 @@
             <tbody>
                 {% for client in clients.object_list %}
                 {% if not client.is_superuser %}
-
                 <tr>
-                    <td>{{ client.username }}</td>
-                    <td>{{ client.phone_number }}</td>
-                    <td>{{ client.email }}</td>
-                    <td>{{ client.site_location }}</td>
-                    <td>{{ client.site_name }}</td>
-                    <td>{{ client.project_start_date }}</td>
-                    <td>{{ client.project_end_date }}</td>
-                    <td style="width: 300px;">
-                        <a href="{% url 'project_list_by_client' client.id %}" class="btn btn-success btn-sm p-2">View Projects</a>
-                        <a href="{% url 'client_update' client.id %}" class="btn btn-warning btn-sm p-2">Update</a>
-                     
+                    <td><i class="fa fa-user"></i> {{ client.username }}</td>
+                    <td><i class="fa fa-phone"></i> {{ client.phone_number }}</td>
+                    <td><i class="fa fa-envelope"></i> {{ client.email }}</td>
+                    <td><i class="fa fa-map-marker"></i> {{ client.site_location }}</td>
+                    <td><i class="fa fa-building"></i> {{ client.site_name }}</td>
+                    <td><i class="fa fa-calendar"></i> {{ client.project_start_date }}</td>
+                    <td><i class="fa fa-calendar-check"></i> {{ client.project_end_date }}</td>
+                    <td>
+                        <a href="{% url 'project_list_by_client' client.id %}" class="btn btn-success btn-sm p-2">
+                            <i class="fa fa-eye"></i> View Projects
+                        </a>
                     </td>
                 </tr>
-                {%endif%}
+                {% endif %}
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{% url 'register' %}" class="btn btn-primary fs-4">Add New Client</a>
-        </div>
-            </div>
-    <nav aria-label="Page navigation example" style="margin-left:79em;margin-top:2em;">
-        <p class="text-primary d-flex justify-content-left ">Page:{{clients.number}}/{{clients.paginator.num_pages}}</p>
-        <ul class="pagination">
-             {% if clients.has_previous %}
-                    <li class="page-item"><a class="page-link" href="{% url 'client_list'%}?page={{clients.previous_page_number}}">Previous</a></li>
-             {% endif %}
-             {% for num_page in clients.paginator.page_range%}
-                {% if clients.number == num_page  %}
-                
-                <li class="page-item active">
-                    <a class="page-link" href="{% url 'client_list' %}?=page{{num_page}}">{{num_page}}</a>
-                </li>
-                {% endif %}
-             {%endfor%}
-             {% if clients.has_next %}
-                 <li class="page-item"><a class="page-link" href="{% url 'client_list'%}?page={{clients.next_page_number}}">Next</a></li>
-             {%endif%}
-        </ul>
-       
-      </nav>
+
+        <!-- Per Page Selection Dropdown -->
+     
+<!-- Per Page Selection Dropdown -->
+<div class="select-container" style="margin-left: 800px;">
+    <i class="bi bi-list select-icon"></i>
+    <select id="select_per_page" class="form-select" onchange="perPageChange(this.value)">
+        <option value="2" {% if per_page == 2 %}selected{% endif %}>2 items</option>
+        <option value="3" {% if per_page == 3 %}selected{% endif %}>3 items</option>
+        <option value="4" {% if per_page == 4 %}selected{% endif %}>4 items</option>
+        <option value="100" {% if per_page == 100 %}selected{% endif %}>100 items</option>
+    </select>
+</div>
+
+
+<a href="{% url 'register' %}" class="btn btn-primary fs-4">Add New Client</a>
+</div>
+</div>
+
+<!-- Pagination -->
+<nav aria-label="Page navigation example" class="offset-md-9">
+    <p class="text-primary">Page: {{ clients.number }}/{{ clients.paginator.num_pages }}</p>
+    <ul class="pagination">
+        {% if clients.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ clients.previous_page_number }}&per_page={{ per_page }}">Previous</a>
+            </li>
+        {% endif %}
+
+        {% for num_page in clients.paginator.page_range %}
+            <li class="page-item {% if clients.number == num_page %}active{% endif %}">
+                <a class="page-link" href="?page={{ num_page }}&per_page={{ per_page }}">{{ num_page }}</a>
+            </li>
+        {% endfor %}
+
+        {% if clients.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ clients.next_page_number }}&per_page={{ per_page }}">Next</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+
+<!-- JavaScript for Per Page Selection -->
+<script>
+    function perPageChange(per_page) {
+        let url = new URL(window.location.href);
+        url.searchParams.set('per_page', per_page);
+        url.searchParams.set('page', 1); // Reset to page 1 when changing per_page
+        window.location.href = url.toString();
+    }
+</script>
 {% endblock %}

@@ -1,3 +1,4 @@
+
 {% extends 'projectsite/base.html' %}
 {% load static %}
 {% load bootstrap5 %}
@@ -7,161 +8,71 @@
 {% block title %}Register Page{% endblock %}
 
 {% block content %}
+<div class="container-fluid create fs-5 table-responsive d-flex justify-content-center align-items-center bg-info" 
+    style="margin-left:30em;width: 700px; margin-top: 1em; background-size: cover; border-radius: 10%; padding: 30px; opacity: 0.7;">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1>Register Page</h1>
 
-<style>
-    .success-popup {
-        position: fixed;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgb(11, 186, 11);
-        color: white;
-        padding: 70px;
-        text-align: center;
-        width:250px;
-        height: 200px;
-        border:2px solid white;
-        border-radius: 10%;
-    }
-    
-</style>
-<div class="container well d-flex justify-content-center align-items-center " style="width: 650px; margin-top:2em; margin-left:550px;">
-    <div class="row p-2 m-3 ">
-        <h2 class="page-header text-center mb-4" style="color: rgb(75, 42, 165);">Register</h2>
-      
-
-        <form method="post" id="registerform"  enctype="multipart/form-data" autocomplete="off">
-            {% csrf_token %}
-
-            <!-- Username Field -->
-            <div class="form-group row mb-3">
-                <label for="id_username" class="col-md-3 col-form-label">Username:</label>
-                <div class="col-md-9">
-                    <input type="text" id="id_username" name="username" class="form-control" required>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
                 </div>
-            </div>
+            {% endfor %}
+        {% endif %}
 
-            <!-- Email Field -->
-            <div class="form-group row mb-4">
-                <label for="id_email" class="col-md-3 col-form-label">Email:</label>
-                <div class="col-md-9 mt-2">
-                    <input type="email" id="id_email" name="email" class="form-control" required>
-                </div>
-            </div>
+        <div style="width: 550px;">
+            {{ form.as_p }}
 
-            <!-- Phone Number Field -->
-            <div class="form-group row mb-3">
-                <label for="id_phone_number" class="col-md-3 col-form-label">Phone Number:</label>
-                <div class="col-md-9 mt-2">
-                    <input type="text" id="id_phone_number" name="phone_number" class="form-control">
-                </div>
-            </div>
+            <!-- Password 1 Field -->
+             <!-- Password Field -->
+<div class="input-group">
+    {{ form.password1 }}
+    <span class="input-group-text" onclick="togglePassword('password1', 'toggleIcon1')">
+        <i class="bi bi-eye-slash" id="toggleIcon1"></i>
+    </span>
+</div>
 
-            <!-- Site Location Field -->
-            <div class="form-group row mb-3">
-                <label for="id_site_location" class="col-md-3 col-form-label">Site Location:</label>
-                <div class="col-md-9">
-                    <input type="text" id="id_site_location" name="site_location" class="form-control">
-                </div>
-            </div>
+<!-- Confirm Password Field -->
+<div class="input-group">
+    {{ form.password2 }}
+    <span class="input-group-text" onclick="togglePassword('password2', 'toggleIcon2')">
+        <i class="bi bi-eye-slash" id="toggleIcon2"></i>
+    </span>
+</div>
 
-            <!-- Site Name Field -->
-            <div class="form-group row mb-3">
-                <label for="id_site_name" class="col-md-3 col-form-label">Site Name:</label>
-                <div class="col-md-9">
-                    <input type="text" id="id_site_name" name="site_name" class="form-control">
-                </div>
-            </div>
-
-            <!-- Project Start Date Field -->
-            <div class="form-group row mb-3">
-                <label for="id_project_start_date" class="col-md-3 col-form-label">Project Start Date:</label>
-                <div class="col-md-9 mt-3">
-                    <input type="date" id="id_project_start_date" name="project_start_date" class="form-control">
-                </div>
-            </div>
-
-            <!-- Project End Date Field -->
-            <div class="form-group row mb-3">
-                <label for="id_project_end_date" class="col-md-3 col-form-label">Project End Date:</label>
-                <div class="col-md-9 mt-3">
-                    <input type="date" id="id_project_end_date" name="project_end_date" class="form-control">
-                </div>
-            </div>
          
-            
-
-            <!-- Documents Field -->
-            <div class="form-group row mb-3">
-                <label for="id_documents" class="col-md-3 col-form-label">Documents:</label>
-                <div class="col-md-9 mt-1">
-                    <input type="file" id="id_documents" name="documents" class="form-control">
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label for="id_password1" class="col-md-3 col-form-label">Password1:</label>
-                <div class="col-md-9 mt-1">
-                    <input type="password" id="id_password1" name="password1" class="form-control">
-                </div>
-            </div>
-            <div class="form-group row mb-3">
-                <label for="id_password2" class="col-md-3 col-form-label">Confirn Password:</label>
-                <div class="col-md-9 mt-3">
-                    <input type="password" id="id_password2" name="password2" class="form-control">
-                </div>
-            </div>
-
-            <!-- Role Selection -->
-            <div class="form-group row mb-4">
-                <label for="id_role" class="col-md-3 col-form-label">Select Role:</label>
-                <div class="col-md-9">
-                    <select id="id_role" name="role" class="form-control" required>
-                        <option value="admin">Admin</option>
-                        <option value="team_user">Team User</option>
-                        <option value="client">Client</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="form-group text-center">
-                <button type="submit" class="btn  bg-primary text-light" id="submitbtn">Register</button>
-             
-            </div>
-           
-              
-            
-        
-            <div class="border-top pt-3 pb-2 text-center">
-                <small class="text-muted">
-                    Already have an account? <a href="{% url 'login' %}">Sign in</a>
-                </small>
-            </div>
-        </form>
-    </div>
+        <button type="submit" class="bg-primary text-light" style="margin-left:460px;">Register</button>
+    </form>
 </div>
 
 <script>
-    // Get the current date in the required format (YYYY-MM-DD)
+    // Disable past dates dynamically
     const today = new Date().toISOString().split('T')[0];
-
-    // Set the 'min' attribute dynamically to hide past dates
     document.getElementById('id_project_start_date').setAttribute('min', today);
     document.getElementById('id_project_end_date').setAttribute('min', today);
- 
-   
-   
-    document.getElementById('submitbtn').addEventListener('click', function() {
-        let success = document.createElement('div');
-        success.className = "success-popup";
-        success.textContent = "Registration Successful!!!!";
-        document.body.appendChild(success);
-    
-        // Remove pop-up after 3 seconds
-        setTimeout(() => success.remove(), 3000);
+
+    // Toggle Password Visibility
+    function togglePassword(fieldId, iconId) {
+        let passwordField = document.getElementById(fieldId);
+        let icon = document.getElementById(iconId);
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text"; // Show password
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash"); // Change icon
+        } else {
+            passwordField.type = "password"; // Hide password
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye"); // Revert icon
+        }
+    }
+  
+
+    // Hide messages after 5 seconds
+    $(document).ready(function () {
+        $('.alert').fadeOut(5000);
     });
-    
- 
- 
 </script>
 {% endblock %}

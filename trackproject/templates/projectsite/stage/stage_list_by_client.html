@@ -9,6 +9,7 @@
 {% block content %}
 
 <div class="table-responsive"style="margin-left:16em; margin-top:5em;width:1150px">
+   
     <h1>Projects for {{ client.name }}</h1>
     <table class="table table-striped" style="width: 850px;">
         <thead>
@@ -34,4 +35,6 @@
     </table>
     <a href="{% url 'project_add' %}" class="btn btn-primary mt-3">Add New Project</a>
     <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">Back to Project List</a>
+    </div>
+   
 {% endblock %}

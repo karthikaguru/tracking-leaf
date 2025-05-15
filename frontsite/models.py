@@ -49,10 +49,7 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
-    def save(self, *args, **kwargs):
-        if not self.documents:
-            self.documents = None  # Avoid unnecessary uploads
-        super().save(*args, **kwargs)
+    
 
-
+    
 

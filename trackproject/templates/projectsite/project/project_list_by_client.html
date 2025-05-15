@@ -8,6 +8,15 @@
 
 {% block content %}
 <div class="container p-4" style="margin-left:25em; width:850px; margin-top:4em;">
+     
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+  
+    {% endfor %}
+    {% endif %}
     <h1>Projects for {{ client.username }}</h1>
     <table class="table table-striped table-hover table-bordered text-center">
         <thead>
@@ -42,4 +51,14 @@
     <a href="{% url 'project_add' %}" class="btn btn-primary mt-3">Add New Project</a>
     <a href="{% url 'project_list' %}" class="btn btn-secondary mt-3">Back to Project List</a>
 </div>
+<script>
+    $(document).ready(function(){
+        setTimeout(function(){
+            $('.alert').fadeOut('slow');
+        },3000);
+        });
+    
+  
+    
+</script>
 {% endblock %}

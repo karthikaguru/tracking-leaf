@@ -27,7 +27,7 @@
           <td>{{ expense.date }}</td>
           <td style="width: 300px;">
             <a href="{% url 'expense_edit' project.id expense.id %}" class="btn btn-warning m-1 text-light">Update</a>
-            <a href="{% url 'expense_delete' project.id expense.id %}" class="btn btn-danger m-1">Delete</a>
+          
           </td>
         </tr>
       {% endfor %}
@@ -35,7 +35,6 @@
   </table>
   <div class="m-2 p-2">
  <button class="bg-success  "><a href="{% url 'expense_new' project.id %} " class=" btn btn-success text-light">Add new expense</a></button>
- <button class="bg-primary"><a href="{% url 'project_list' %}" class="btn btn-primary ">Back to Project List</a> </button>
 
 </div>
  </div>
