@@ -58,11 +58,12 @@ def project_list(request, client_id=None):
     if client_id:
         projects = Project.objects.filter(client_id=client_id)
     else:
+        per_page = int(request.GET.get('per_page', 2)) 
         projects = Project.objects.all()
-        project_page =Paginator(projects,5)
-        project_list= request.GET.get('page')
+        project_page =Paginator(projects,per_page)
+        project_list= request.GET.get('page',1)
         project_page= project_page.get_page(project_list)
-    return render(request, 'projectsite/project/project_list.html', {'projects': project_page})
+    return render(request, 'projectsite/project/project_list.html', {'projects': project_page,'per_page':per_page})
 
 
 

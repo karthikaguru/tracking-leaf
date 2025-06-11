@@ -16,6 +16,7 @@
         background-position:fixed ;
     }
 </style>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
 <div class="container-fluid create fs-5  table-responsive d-flex justify-content-center align-items-center bg-info" style="margin-left:30em;width: 500px; margin-top: 11em; background-size: cover;border-radius :10%;padding: 30px;
     opacity: 0.7;">
@@ -52,22 +53,21 @@
                     >
                 </div>
             </div>
-            
-            <!-- Password Field -->
-            <div class="form-group row mb-3 popup"  >
-                <label for="email" class="col-sm-3 col-form-label">Password:</label>
-                <div class="col-sm-9">
-                    <input type="password" style="display: none;">
-                    <input 
-                        type="password" 
-                        name="password" 
-                        id="password" 
-                        placeholder="Enter your password" 
-                        class="form-control"
-                        required
-                    >
-                </div>
-            </div>
+                       
+               
+         <!-- Password Field -->
+<div class="form-group row mb-3 popup">
+    <label for="password" class="col-sm-3 col-form-label">Password:</label>
+    <div class="col-sm-9">
+        <div class="input-group">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required>
+            <span class="input-group-text">
+                <i class="bi bi-eye-slash" id="togglePassword" style="cursor: pointer;"></i>
+            </span>
+        </div>
+    </div>
+</div>
+
 
             <!-- Submit Button -->
             <div >
@@ -81,9 +81,7 @@
                         <a href= "#" class="forgot-password-link"></a>
                     </p>
                 
-                    <p class="text-center mt-3">
-                        Don't have an account? <a href="{% url 'register' %}">Register</a>
-                    </p>
+                    
                 </div>
                 </div>
             </div>
@@ -116,6 +114,26 @@
         document.getElementById('username').value = '';
         document.getElementById('password').value = '';
     }
+ 
 
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordField = document.getElementById("password");
+        const toggleIcon = document.getElementById("togglePassword");
+
+        toggleIcon.addEventListener("click", function () {
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.classList.remove("bi-eye-slash");
+                toggleIcon.classList.add("bi-eye");
+            } else {
+                passwordField.type = "password";
+                toggleIcon.classList.remove("bi-eye");
+                toggleIcon.classList.add("bi-eye-slash");
+            }
+        });
+    });
 </script>
+
+
+
 {% endblock %}
