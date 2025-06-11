@@ -1,0 +1,66 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Project Dashboard{% endblock %}
+
+{% block content %}
+<h1>Welcome, {{ client.name }}</h1>
+<h2>Your Projects:</h2>
+<ul>
+    {% for project in projects %}
+        <li>{{ project.name }} - {{ project.duration }} days, Budget: {{ project.budget }} - Total Spent: {{ project.total_spent }}
+            <a href="{% url 'status_update' project.id %}">Update Status</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Budget vs. Total Spent</h2>
+<canvas id="budgetChart" width="400" height="200"></canvas>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/path/to/all_projects_dashboard_view')
+    .then(response => response.json())
+    .then(data => {
+        var projectNames = data.project_names;
+        var budgets = data.budgets;
+        var totalSpents = data.total_spents;
+
+        console.log("Project Names: ", projectNames);
+        console.log("Budgets: ", budgets);
+        console.log("Total Spent: ", totalSpents);
+
+        var ctx = document.getElementById('budgetChart').getContext('2d');
+        var budgetChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: projectNames,
+                datasets: [{
+                    label: 'Budget',
+                    data: budgets,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Total Spent',
+                    data: totalSpents,
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching data:', error));
+</script>
+{% endblock %}

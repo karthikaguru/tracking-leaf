@@ -1,0 +1,27 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Project Details{% endblock %}
+{% block content %}
+
+
+<!-- Project Overview -->
+<div class="container p-4 well" style="margin-left:25em; width:632px; margin-top:4em;">
+    <h1>Project Details: {{ project.name }}</h1>
+    <p><strong>Client:</strong> {{ project.client.username }}</p>
+    <p><strong>Status:</strong> {{ project.get_status_display }}</p>
+    <p><strong>Start Date:</strong> {{ project.client.project_start_date }}</p>
+    <p><strong>End Date:</strong> {{ project.client.project_end_date }}</p>
+</div>
+
+<!-- Financial Overview -->
+<div class="container p-4 well" style="margin-left:25em; width:632px; margin-top:4em;">
+    <h2>Financial Overview</h2>
+    <p><strong>Total Budget:</strong> ₹{{ project.budget }}</p>
+    
+</div>
+
+{%endblock%}

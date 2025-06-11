@@ -1,0 +1,33 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<div class="container"style="width: 850px;">
+    <h2>Project Stages</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>Start Date</th>
+                <th>Due Date</th>
+                <th>Progress</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stage in stages %}
+            <tr>
+                <td><a href="{% url 'stage_details' stage.id %}">{{ stage.get_stage_type_display }}</a></td>
+                <td>{{ stage.start_date }}</td>
+                <td>{{ stage.due_date }}</td>
+                <td>{{ stage.progress }}%</td>
+                <td>{{ stage.get_completed_display }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

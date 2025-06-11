@@ -1,0 +1,19 @@
+<!-- client_onboarding.html -->
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Delete Client{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="margin-left:25em ;width:632px;margin-top:4em">
+    <h1>Are you sure you want to delete this client?</h1>
+    <p><strong>Client Name:</strong> {{ client.name }}</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, delete</button>
+        <a href="{% url 'client_list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

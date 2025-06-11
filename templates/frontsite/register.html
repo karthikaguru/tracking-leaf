@@ -1,0 +1,78 @@
+
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Register Page{% endblock %}
+
+{% block content %}
+<div class="container-fluid create fs-5 table-responsive d-flex justify-content-center align-items-center bg-info" 
+    style="margin-left:30em;width: 700px; margin-top: 1em; background-size: cover; border-radius: 10%; padding: 30px; opacity: 0.7;">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h1>Register Page</h1>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <div style="width: 550px;">
+            {{ form.as_p }}
+
+            <!-- Password 1 Field -->
+             <!-- Password Field -->
+<div class="input-group">
+    {{ form.password1 }}
+    <span class="input-group-text" onclick="togglePassword('password1', 'toggleIcon1')">
+        <i class="bi bi-eye-slash" id="toggleIcon1"></i>
+    </span>
+</div>
+
+<!-- Confirm Password Field -->
+<div class="input-group">
+    {{ form.password2 }}
+    <span class="input-group-text" onclick="togglePassword('password2', 'toggleIcon2')">
+        <i class="bi bi-eye-slash" id="toggleIcon2"></i>
+    </span>
+</div>
+
+         
+        <button type="submit" class="bg-primary text-light" style="margin-left:460px;">Register</button>
+    </form>
+</div>
+
+<script>
+    // Disable past dates dynamically
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('id_project_start_date').setAttribute('min', today);
+    document.getElementById('id_project_end_date').setAttribute('min', today);
+
+    // Toggle Password Visibility
+    function togglePassword(fieldId, iconId) {
+        let passwordField = document.getElementById(fieldId);
+        let icon = document.getElementById(iconId);
+
+        if (passwordField.type === "password") {
+            passwordField.type = "text"; // Show password
+            icon.classList.remove("fa-eye");
+            icon.classList.add("fa-eye-slash"); // Change icon
+        } else {
+            passwordField.type = "password"; // Hide password
+            icon.classList.remove("fa-eye-slash");
+            icon.classList.add("fa-eye"); // Revert icon
+        }
+    }
+  
+
+    // Hide messages after 5 seconds
+    $(document).ready(function () {
+        $('.alert').fadeOut(5000);
+    });
+</script>
+{% endblock %}

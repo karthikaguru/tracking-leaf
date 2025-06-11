@@ -1,0 +1,43 @@
+{% extends 'projectsite/base.html' %}
+{% block title %}Stage List{% endblock %}
+{% block content %}
+
+<div class="table-responsive"style="margin-left:16em; margin-top:5em;width:1150px">
+   
+    <h1>Stages for Project: {{ project.name }}</h1>
+    <table class="table table-striped table-bordered table-hover" style="width: 750px; text-align:center;">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Progress</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stage in stages %}
+                    <tr>
+                        <td>{{ stage.name }}</td>
+                        <td>{{ stage.get_stage_type_display }}</td>
+                        <td>{{ stage.progress }}%</td>
+                        <td>
+                            <a href="{% url 'stage_edit' stage.id %}" class="btn btn-warning btn-sm">Update</a>
+                            <a href="{% url 'expense_list' project.id %}" class="btn btn-success btn-sm">Expenses</a>
+                        
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No stages found for this project.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'stage_add' project.id %}" class="btn btn-success">Add New Stage</a>
+        </div>
+        
+        
+        {% endblock %}
+        
+                    
+             

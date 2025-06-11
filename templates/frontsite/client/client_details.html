@@ -1,0 +1,18 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}Client Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Client Details</h2>
+    <p>Name: {{ client.name }}</p>
+    <p>Email: {{ client.email }}</p>
+    <a href="{% url 'client_edit' client.id %}" class="btn btn-secondary">Edit</a>
+    <a href="{% url 'client_delete' client.id %}" class="btn btn-danger">Delete</a>
+</div>
+{% endblock %}
+

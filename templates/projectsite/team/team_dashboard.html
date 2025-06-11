@@ -1,0 +1,50 @@
+<h1>Team Dashboard</h1>
+<p>Total Ongoing Projects: {{ ongoing_projects }}</p>
+<p>Total Completed Projects: {{ completed_projects }}</p>
+<p>Total Expenses: ₹{{ total_expenses }}</p>
+
+<h2>Projects</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Status</th>
+            <th>Total Spent</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for project in projects %}
+        <tr>
+            <td>{{ project.name }}</td>
+            <td>{{ project.status }}</td>
+            <td>₹{{ project.total_spent|default:"0" }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Expense Chart</h2>
+<canvas id="expenseChart"></canvas>
+<script>
+    const projectNames = {{ project_names|safe }};
+    const projectExpenses = {{ project_expenses|safe }};
+    const ctx = document.getElementById('expenseChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: projectNames,
+            datasets: [{
+                label: 'Total Expenses',
+                data: projectExpenses,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>

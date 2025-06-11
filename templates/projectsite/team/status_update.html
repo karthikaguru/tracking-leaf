@@ -1,0 +1,64 @@
+<!-- client_onboarding.html -->
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Status_update{% endblock %}
+
+
+{% block content %}
+<h1>Update Status for {{ project.name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<h2>Project Details</h2>
+<p>Budget: {{ project.budget }}</p>
+<p>Total Spent: {{ total_spent }}</p>
+<p>Balance: {{ balance }}</p>
+
+<h2>Stages</h2>
+<ul>
+    {% for stage in stages %}
+        <li>{{ stage.name }} ({{ stage.start_date }} - {{ stage.end_date }})</li>
+    {% endfor %}
+</ul>
+
+<h2>Stage Progress</h2>
+<canvas id="stageChart" width="400" height="200"></canvas>
+<script type="application/json" id="stageNamesData">{{ stage_names|json_script:"stageNamesData" }}</script>
+<script type="application/json" id="stageProgressData">{{ stage_progress|json_script:"stageProgressData" }}</script>
+<script>
+    var stageNames = JSON.parse(document.getElementById('stageNamesData').textContent);
+    var stageProgress = JSON.parse(document.getElementById('stageProgressData').textContent);
+
+    var ctx = document.getElementById('stageChart').getContext('2d');
+    var stageChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: stageNames,
+            datasets: [{
+                label: 'Progress',
+                data: stageProgress,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
+
+
+
+

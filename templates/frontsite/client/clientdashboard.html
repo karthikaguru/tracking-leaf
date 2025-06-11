@@ -1,0 +1,116 @@
+{% extends 'projectsite/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% block title %}Client Dashboard{% endblock %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% block content %}
+
+
+<div class="container mt-5 d-flex flex-column align-items-center mb-5" >
+  <div class="content-section text-center "style="margin-left:34em; width:700px">
+
+  {% if messages %}
+  <div>
+      {% for message in messages %}
+          <p class="alert alert-{{ message.tags }}">{{ message }}</p>
+      {% endfor %}
+  </div>
+  {% endif %}
+
+
+ 
+
+  <div class="container-fluid mt-5 bg-light">
+    <h1 class="text-success " style="font-weight: bold;">Client Dashboard</h1>
+    <h2 class="text-secondary mb-5"> Welcome, {{ project_names}}</h2>
+    
+    
+    <table class="table table-bordered table-hover">
+        <thead class="bg-secondary text-light"> 
+            <tr>
+                <th>Project Name</th>
+                <th>Status</th>
+                <th>Budget</th>
+                <th>Amount Spent</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+                <tr>
+                    <td>{{ project.name }}</td>
+                    <td>{{ project.status }}</td>
+                    <td>${{ project.budget }}</td>
+                    <td> {% for expense in expenses %}
+                      ${{ expense.amount_spent }}<br>
+                          {% endfor %}
+  </td>
+
+                </tr>
+               
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+  <!-- Adding charts (if required) -->
+  <h2>Project Budgets and Total Spent</h2>
+  <canvas id="projectBudgetChart" class="bg-light"></canvas>
+  {%block script%}
+ <script>
+  const ctx = document.getElementById('projectBudgetChart').getContext('2d');
+  
+
+
+  // Initialize Chart.js
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ project_names|safe }}, // Correct labels array
+      datasets: [
+        {
+          label: 'Budget',
+          data: {{ budgets|safe }},
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          borderColor: 'rgba(255, 159, 64, 1)',
+
+        },
+        {
+          label: 'Total Spent',
+          data:[{% for expense in expenses %}  {{ expense.amount_spent }},  {% endfor %}],
+        
+            
+          backgroundColor: 'rgba(255, 99, 132, 0.6)',
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: { beginAtZero: true },
+      },
+    },
+  });
+
+
+  
+</script>
+
+
+
+
+{%endblock%}
+    
+</div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // Hides the message after 5 seconds (5000ms)
+            $('.alert').hide(4000);
+        });
+    </script>
+{% endblock %}
+
