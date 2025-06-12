@@ -171,3 +171,9 @@ h1, p {
     color:Light;
     
 }
+.nav-link.test:hover {
+  color: red; /* Change text color when hovered */
+  background-color: yellow; /* Change background color */
+  transition: all 0.3s ease-in-out; /* Smooth transition */
+}
+
