@@ -106,10 +106,10 @@ def login_view(request):
 def client_list(request):
     # Get 'per_page' from the request, default to 2 if not provided
     per_page = int(request.GET.get('per_page', 2))  # Default to 2 items per page
-    
+   
     # Fetch all clients
     clients = CustomUser.objects.all()
-    
+    clients = CustomUser.objects.filter(is_staff=False) 
     # Apply pagination
     paginator = Paginator(clients, per_page)
     page_number = request.GET.get('page', 1)  # Default to page 1

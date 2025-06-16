@@ -11,9 +11,17 @@
         position: relative;
     }
 
+   
     .select-container select {
-        padding-left: 40px; /* Space for the icon */
+    padding-left: 2.5em;
+    text-indent: 1.5em; /* Helps visually align text after icon */
     }
+    .select-icon {
+        z-index: 2;
+        pointer-events: none; /* Prevent icon from interfering with select clicks */
+    }
+
+
 
     .select-icon {
         position: absolute;
@@ -53,8 +61,10 @@
             <tbody>
                 {% for client in clients.object_list %}
                 {% if not client.is_superuser %}
+    
+
                 <tr>
-                    <td><i class="fa fa-user"></i> {{ client.username }}</td>
+                    <td><i class="bi bi-person"></i> {{ client.username }}</td>
                     <td><i class="fa fa-phone"></i> {{ client.phone_number }}</td>
                     <td><i class="fa fa-envelope"></i> {{ client.email }}</td>
                     <td><i class="fa fa-map-marker"></i> {{ client.site_location }}</td>
@@ -103,6 +113,7 @@
         {% endif %}
     </ul>
 </nav>
+
 
 <!-- JavaScript for Per Page Selection -->
 <script>
