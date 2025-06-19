@@ -11,21 +11,34 @@
         flex-direction: column;
        
     }
-    
+    #update{
+        display:flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        border:1px solid black;
+        background-color: aqua;
+
+    }
 </style>
-         
-         <div class ="container bg-light p-3" style="margin: 450px;margin-top:100px;width:550px;height:300px;">
+<div style="width: 550px;margin:13px;margin-left:36em;margin-top:40px;">
+        
+        {% for message in messages %}
+         {% if messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        {% endif %}
+        {% endfor %}
+        </div>
+         <div class ="container bg-light p-3" style="margin: 10px;width:550px;height:300px;margin-left:36em;">
   
-             {% if messages%}
-            {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
-                    {{ message }}
-                </div>
-            {%endfor%}
-            {%endif%}
+           
            <h1 class="bg-info ">PROFILE INFORMATION</h1>
+             
            {% if not user.is_superuser %} 
-           <p style="margin-left:420px;margin-top:10px;" class="btn  bg-warning btn-outline-success "><a href="{% url 'profile'%}">Update</a></p>
+           <p style="margin-left:420px;margin-top:10px;" class="btn  bg-warning btn-outline-success " id="update"><a href="{% url 'profile'%}">Update</a></p>
            {% endif %}
            <div class="profile-container">    
                   
@@ -45,8 +58,11 @@
           
              $(document).ready(function () {
         // Hides the message after 5 seconds (5000ms)
-            $('.alert').hide(10000);
+            $('.alert').fadeOut(10000);
         });
+        document.getElementById("update").addEventListener('click',function(){
+            document.style.display('updated successfully')
+        })
         </script>
 {% endif %}
  {% endblock %}    

@@ -22,6 +22,14 @@
         transform: scale(1.1);
         
     }
+    .hover-zoom a {
+  transition: transform 0.3s ease-in-out;
+}
+
+.hover-zoom a:hover {
+  transform: scale(1.3);
+}
+
 </style>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 
@@ -100,14 +108,19 @@
        
     </div>
 </div>
-
+    
+<span class="d-flex justify-content-center gap-3  bg-light hover-zoom " style="margin:1px;margin-top: 50em;margin-left:89em;width:200px;position:fixed; ">
+                <a href="https://wa.me/919626562300"target="_blank" class="text-success fs-4 i"><i class="fab fa-whatsapp"></i> </a>
+                <a href="#" target="_blank" class=" fs-4 i" style="color:violet;text-decoration:none;"><i class="fab fa-instagram" style="color: #A346FF;"></i> </a>
+                <a href="#" target="_blank" class="fs-4 i"><i class="fab fa-linkedin"></i> </a>
+      </span>
 <!-- jQuery Script to Auto-Hide Messages -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     
     $(document).ready(function () {
         // Hides the message after 5 seconds (5000ms)
-            $('.alert').fadeOut(3000);
+            $('.alert').fadeOut(5000);
         });
    
     document.addEventListener("DOMContentLoaded", function() {
@@ -141,21 +154,15 @@
             }
         });
     });
-    document.addEventListener('DOMContentLoaded', function () {
-  document.getElementById('submitbtn').addEventListener('click', function () {
-    document.getElementById('spinner').style.display = 'inline-block';
-        setTimeout(function () {
-      spinner.style.display = 'none';
-    }, 2000); // 2000 milliseconds = 2 seconds
-  });
-
-  });
-
-
-
-    </script>
-
-
+    document.getElementById('submitbtn').addEventListener('click',function(){
+    document.getElementById('spinner').style.display ="inline-block"
+    setTimeout(function(){
+        $('.alert').fadeOut(1000);
+    })
+    });
+   
+</script>
+    
 
 
 
